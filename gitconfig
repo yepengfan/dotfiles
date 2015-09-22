@@ -29,3 +29,6 @@
   autosquash = true
 [include]
   path = ~/.gitconfig.local
+[user]
+  email = yepeng.fan@hotmail.com
+  name = Yepeng Fan
