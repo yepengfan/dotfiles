@@ -131,6 +131,7 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
 " Vimux key binding more info (:help vimux)
+let g:VimuxOrientation = "h"
 map <Leader>vp :VimuxPromptCommand<CR>
 map <Leader>vm :VimuxPromptCommand("make ")<CR>"
 map <Leader>vq :VimuxCloseRunner<CR>
