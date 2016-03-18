@@ -12,15 +12,11 @@
   co = checkout
   pf = push --force-with-lease
   st = status
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s%Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  di = diff
-  diw = diff --word-diff=color
-  rbi = rebase --interactive --autosquash
 [core]
   excludesfile = ~/.gitignore
 	autocrlf = false
 [merge]
-	tool = diffmerge
+  ff = only
 [commit]
   template = ~/.gitmessage
 [fetch]
@@ -29,15 +25,3 @@
   autosquash = true
 [include]
   path = ~/.gitconfig.local
-[user]
-  email = yepeng.fan@hotmail.com
-  name = Yepeng Fan
-[diff]
-	tool = diffmerge
-[difftool "diffmerge"]
-	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
-[mergetool "diffmerge"]
-	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
-	trustExitCode = true
-[gc]
-	auto = 0
