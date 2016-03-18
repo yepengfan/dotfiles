@@ -9,7 +9,6 @@ set history=50
 set ruler         " show the cursor position all the time
 set showcmd       " display incomplete commands
 set incsearch     " do incremental searching
-set hlsearch
 set laststatus=2  " Always display the status line
 set autowrite     " Automatically :write before running commands
 
@@ -76,10 +75,6 @@ if executable('ag')
 endif
 
 " Make it obvious where 80 characters is
-set wrap
-set linebreak
-set nolist  " list disables linebreak
-set formatoptions+=w
 set textwidth=80
 set colorcolumn=+1
 
@@ -137,20 +132,11 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
-" Vimux key binding more info (:help vimux)
-let g:VimuxOrientation = "h"
-map <Leader>vp :VimuxPromptCommand<CR>
-map <Leader>vm :VimuxPromptCommand("make ")<CR>"
-map <Leader>vq :VimuxCloseRunner<CR>
-map <Leader>vl :VimuxRunLastCommand<CR>
-map <Leader>vi :VimuxInspectRunner<CR>
-
 " configure syntastic syntax checking to check on open as well as save
 let g:syntastic_check_on_open=1
 let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
 let g:syntastic_eruby_ruby_quiet_messages =
     \ {"regex": "possibly useless use of a variable in void context"}
-nnoremap <space>ru :SyntasticCheck rubocop<CR>
 
 " Set spellfile to location that is guaranteed to exist, can be symlinked to
 " Dropbox or kept in Git and managed outside of thoughtbot/dotfiles using rcm.
