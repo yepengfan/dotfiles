@@ -51,4 +51,14 @@ remove/uninstall plugins not on the plugin list.
 #### Vim plugins
 * [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
 
+### Keep fork updated
+#### Track upstream repo
+* git clone git@github.com:croaky/dotfiles.git
+* cd dotfiles
+* git remote add upstream git@github.com:thoughtbot/dotfiles.git
+
+#### Update upstream and rebase to current HEAD
+* git fetch upstream
+* git rebase upstream/master
+
 **Please change the** `user info` **in gitconfig to yourself if you fork this repo**
