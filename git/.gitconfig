@@ -7,7 +7,7 @@
 	process = git-lfs filter-process
 	required = true
 [credential]
-	helper = manager-core
+	helper = manager
 [init]
 	defaultBranch = main
 [core]
