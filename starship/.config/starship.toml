@@ -55,7 +55,9 @@ style = "bold yellow"
 success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 
-[palette.catppuccin_mocha]
+palette = "catppuccin_mocha"
+
+[palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
 flamingo = "#f2cdcd"
 pink = "#f5c2e7"
