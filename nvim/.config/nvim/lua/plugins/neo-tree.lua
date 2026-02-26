@@ -1,19 +1,19 @@
 return {
-  -- Disable snacks explorer (conflicts with neo-tree)
-  { "folke/snacks.nvim", opts = { explorer = { enabled = false } } },
+  -- Disable neo-tree, use snacks explorer instead
+  { "nvim-neo-tree/neo-tree.nvim", enabled = false },
 
-  -- Neo-tree config
+  -- Configure snacks explorer as persistent sidebar
   {
-    "nvim-neo-tree/neo-tree.nvim",
+    "folke/snacks.nvim",
     opts = {
-      filesystem = {
-        filtered_items = {
-          hide_dotfiles = false,
-          hide_gitignored = false,
+      picker = {
+        sources = {
+          explorer = {
+            auto_close = false,
+            jump = { close = false },
+            layout = { preset = "sidebar", preview = false },
+          },
         },
-      },
-      source_selector = {
-        winbar = true,
       },
     },
   },
