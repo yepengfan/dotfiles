@@ -7,7 +7,7 @@
 	process = git-lfs filter-process
 	required = true
 [credential]
-	helper = manager
+	helper = osxkeychain
 [init]
 	defaultBranch = main
 [core]
