@@ -1,0 +1,73 @@
+# Minimal starship prompt with catppuccin-inspired colors
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$nodejs\
+$python\
+$rust\
+$golang\
+$cmd_duration\
+$line_break\
+$character"""
+
+[directory]
+style = "bold lavender"
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+format = "[$symbol$branch]($style) "
+style = "bold mauve"
+symbol = " "
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = "bold red"
+
+[nodejs]
+format = "[$symbol($version)]($style) "
+symbol = " "
+style = "bold green"
+
+[python]
+format = "[$symbol($version)]($style) "
+symbol = " "
+style = "bold yellow"
+
+[rust]
+format = "[$symbol($version)]($style) "
+symbol = " "
+style = "bold peach"
+
+[golang]
+format = "[$symbol($version)]($style) "
+symbol = " "
+style = "bold blue"
+
+[cmd_duration]
+min_time = 2_000
+format = "[$duration]($style) "
+style = "bold yellow"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[palette.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
