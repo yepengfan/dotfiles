@@ -34,21 +34,12 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"  # colored completions
 # --- PATH ---
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
-export PATH="/opt/homebrew/opt/php@8.1/bin:$PATH"
-export PATH="/opt/homebrew/opt/php@8.1/sbin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # --- Environment ---
 export EDITOR="nvim"
 export VISUAL="nvim"
 export LANG=en_US.UTF-8
-
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export ANDROID_SDK_ROOT=$ANDROID_HOME
-export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools"
-
-export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH
 export ANTHROPIC_MODEL="claude-opus-4-6"
 
 # --- NVM (lazy-loaded for faster startup) ---
