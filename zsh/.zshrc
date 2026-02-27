@@ -1,6 +1,11 @@
 # Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
+# --- Tmux Auto-Start ---
+if command -v tmux &>/dev/null && [[ -z "$TMUX" && -t 0 ]]; then
+  exec tmux new-session -A -s main
+fi
+
 # --- Zsh Options ---
 setopt AUTO_CD              # cd by typing directory name
 setopt AUTO_PUSHD           # push directories on cd
@@ -85,6 +90,10 @@ eval "$(zoxide init zsh)"
 
 # fzf keybindings and completion
 source <(fzf --zsh)
+
+# Restore default history navigation (overridden by plugins)
+bindkey '^P' up-line-or-history
+bindkey '^N' down-line-or-history
 
 # --- Kiro ---
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
