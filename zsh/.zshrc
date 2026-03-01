@@ -2,8 +2,8 @@
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
 # --- Zellij Auto-Start ---
-if command -v zellij &>/dev/null && [[ -z "$ZELLIJ" && -t 0 ]]; then
-  exec zellij attach -c main
+if [[ -x /opt/homebrew/bin/zellij && -z "$ZELLIJ" && -t 0 ]]; then
+  exec /opt/homebrew/bin/zellij
 fi
 
 # --- Zsh Options ---
