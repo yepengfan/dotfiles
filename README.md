@@ -14,6 +14,7 @@ Personal development environment managed with [GNU Stow](https://www.gnu.org/sof
 | `nvim` | [Neovim](https://neovim.io/) | Editor powered by [LazyVim](https://www.lazyvim.org/) |
 | `starship` | [Starship](https://starship.rs/) | Minimal cross-shell prompt |
 | `tmux` | [tmux](https://github.com/tmux/tmux) | Terminal multiplexer |
+| `zellij` | [Zellij](https://zellij.dev/) | Terminal multiplexer (tmux alternative) |
 | `zsh` | [Zsh](https://www.zsh.org/) | Shell config with aliases and plugins |
 
 ## Setup
@@ -47,7 +48,7 @@ stow -D */     # Remove all packages
 
 ## Key Integrations
 
-- **Vim-Tmux Navigator** — seamless `Ctrl+hjkl` navigation between Neovim splits and tmux panes
+- **Smart Splits** — seamless `Ctrl+hjkl` navigation between Neovim splits and multiplexer panes (Zellij, tmux)
 - **Claude Code in Neovim** — AI assistant accessible via custom keybindings
 - **Modern CLI replacements** — `eza` (ls), `bat` (cat), `delta` (diff), `zoxide` (cd), `fzf` (fuzzy finder)
 - **Lazy-loaded NVM** — deferred Node version manager loading for faster shell startup

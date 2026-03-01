@@ -1,0 +1,88 @@
+// Zellij Configuration
+
+theme "catppuccin-mocha"
+
+mouse_mode true
+copy_on_select true
+copy_command "pbcopy"
+scrollback_lines 50000
+pane_frames true
+default_shell "zsh"
+simplified_ui false
+styled_underlines true
+session_serialization true
+on_force_close "quit"
+
+ui {
+    pane_frames {
+        rounded_corners true
+    }
+}
+
+plugins {
+    vim-zellij-navigator location="https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
+        move_mod "ctrl"
+    }
+}
+
+keybinds {
+    shared_except "locked" {
+        // Seamless Ctrl+hjkl navigation (vim-zellij-navigator)
+        bind "Ctrl h" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus_or_tab";
+                payload "left";
+            };
+        }
+        bind "Ctrl j" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus";
+                payload "down";
+            };
+        }
+        bind "Ctrl k" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus";
+                payload "up";
+            };
+        }
+        bind "Ctrl l" {
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus_or_tab";
+                payload "right";
+            };
+        }
+
+        // Restore defaults lost by overriding this section
+        bind "Alt n" { NewPane; }
+        bind "Alt f" { ToggleFloatingPanes; }
+        bind "Alt +" "Alt =" { Resize "Increase"; }
+        bind "Alt -" { Resize "Decrease"; }
+        bind "Alt [" { PreviousSwapLayout; }
+        bind "Alt ]" { NextSwapLayout; }
+
+        // Direct pane splitting (no mode needed)
+        bind "Alt \\" { NewPane "right"; }
+        bind "Alt enter" { NewPane "down"; }
+    }
+
+    // Rebind mode keys to Alt (frees Ctrl+p/n for shell history)
+    shared_except "locked" "pane" {
+        bind "Alt p" { SwitchToMode "pane"; }
+        unbind "Ctrl p"
+    }
+    shared_except "locked" "resize" {
+        bind "Alt r" { SwitchToMode "resize"; }
+        unbind "Ctrl n"
+    }
+    shared_except "locked" "move" {
+        bind "Alt m" { SwitchToMode "move"; }
+    }
+
+    // Pane splitting with | and - (in pane mode)
+    pane {
+        bind "Alt p" { SwitchToMode "normal"; }
+        bind "|" { NewPane "right"; }
+        bind "-" { NewPane "down"; }
+    }
+}
