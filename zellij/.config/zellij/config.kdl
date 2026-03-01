@@ -1,0 +1,66 @@
+// Zellij Configuration
+
+theme "catppuccin-mocha"
+
+mouse_mode true
+copy_on_select true
+copy_command "pbcopy"
+scrollback_lines 50000
+pane_frames true
+default_shell "zsh"
+simplified_ui false
+styled_underlines true
+session_serialization true
+
+ui {
+    pane_frames {
+        rounded_corners true
+    }
+}
+
+// Plugin definitions for vim-zellij-navigator
+plugins {
+    vim-zellij-navigator-move-focus location="https://github.com/hiasr/vim-zellij-navigator/releases/download/v0.3.0/vim-zellij-navigator.wasm" {
+        move_mod "ctrl"
+    }
+    vim-zellij-navigator-move-focus-or-tab location="https://github.com/hiasr/vim-zellij-navigator/releases/download/v0.3.0/vim-zellij-navigator.wasm" {
+        move_mod "ctrl"
+        move_mod_tab "ctrl"
+    }
+}
+
+keybinds {
+    // Seamless Ctrl+hjkl navigation between Neovim splits and Zellij panes
+    shared_except "locked" {
+        bind "Ctrl h" {
+            MessagePlugin "vim-zellij-navigator-move-focus-or-tab" {
+                name "move_focus_or_tab"
+                payload "left"
+            };
+        }
+        bind "Ctrl j" {
+            MessagePlugin "vim-zellij-navigator-move-focus" {
+                name "move_focus"
+                payload "down"
+            };
+        }
+        bind "Ctrl k" {
+            MessagePlugin "vim-zellij-navigator-move-focus" {
+                name "move_focus"
+                payload "up"
+            };
+        }
+        bind "Ctrl l" {
+            MessagePlugin "vim-zellij-navigator-move-focus-or-tab" {
+                name "move_focus_or_tab"
+                payload "right"
+            };
+        }
+    }
+
+    // Pane splitting with | and -
+    pane {
+        bind "|" { NewPane "right"; }
+        bind "-" { NewPane "down"; }
+    }
+}

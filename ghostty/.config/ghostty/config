@@ -23,5 +23,8 @@ clipboard-paste-protection = false
 # Mouse
 mouse-hide-while-typing = true
 
+# Keyboard
+macos-option-as-alt = left
+
 # Misc
 confirm-close-surface = false
