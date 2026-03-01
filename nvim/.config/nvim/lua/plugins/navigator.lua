@@ -6,7 +6,6 @@ return {
   -- Auto-detects tmux, zellij, wezterm, kitty
   {
     "mrjones2014/smart-splits.nvim",
-    lazy = false,
     keys = {
       -- Navigation: Ctrl+hjkl
       { "<C-h>", function() require("smart-splits").move_cursor_left() end, desc = "Navigate Left", mode = { "n", "t" } },
