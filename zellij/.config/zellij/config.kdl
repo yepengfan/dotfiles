@@ -66,10 +66,14 @@ keybinds {
         bind "Alt enter" { NewPane "down"; }
     }
 
-    // Rebind pane mode to Alt+p (frees Ctrl+p for shell history)
+    // Rebind mode keys to Alt (frees Ctrl+p/n for shell history)
     shared_except "locked" "pane" {
         bind "Alt p" { SwitchToMode "pane"; }
         unbind "Ctrl p"
+    }
+    shared_except "locked" "resize" {
+        bind "Alt r" { SwitchToMode "resize"; }
+        unbind "Ctrl n"
     }
 
     // Pane splitting with | and - (in pane mode)
