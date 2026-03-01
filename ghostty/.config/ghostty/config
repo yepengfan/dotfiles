@@ -28,3 +28,4 @@ macos-option-as-alt = left
 
 # Misc
 confirm-close-surface = false
+window-save-state = always
