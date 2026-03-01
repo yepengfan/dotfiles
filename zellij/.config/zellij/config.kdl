@@ -18,42 +18,36 @@ ui {
     }
 }
 
-// Plugin definitions for vim-zellij-navigator
 plugins {
-    vim-zellij-navigator-move-focus location="https://github.com/hiasr/vim-zellij-navigator/releases/download/v0.3.0/vim-zellij-navigator.wasm" {
+    vim-zellij-navigator location="https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
         move_mod "ctrl"
-    }
-    vim-zellij-navigator-move-focus-or-tab location="https://github.com/hiasr/vim-zellij-navigator/releases/download/v0.3.0/vim-zellij-navigator.wasm" {
-        move_mod "ctrl"
-        move_mod_tab "ctrl"
     }
 }
 
 keybinds {
-    // Seamless Ctrl+hjkl navigation between Neovim splits and Zellij panes
     shared_except "locked" {
         bind "Ctrl h" {
-            MessagePlugin "vim-zellij-navigator-move-focus-or-tab" {
-                name "move_focus_or_tab"
-                payload "left"
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus_or_tab";
+                payload "left";
             };
         }
         bind "Ctrl j" {
-            MessagePlugin "vim-zellij-navigator-move-focus" {
-                name "move_focus"
-                payload "down"
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus";
+                payload "down";
             };
         }
         bind "Ctrl k" {
-            MessagePlugin "vim-zellij-navigator-move-focus" {
-                name "move_focus"
-                payload "up"
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus";
+                payload "up";
             };
         }
         bind "Ctrl l" {
-            MessagePlugin "vim-zellij-navigator-move-focus-or-tab" {
-                name "move_focus_or_tab"
-                payload "right"
+            MessagePlugin "vim-zellij-navigator" {
+                name "move_focus_or_tab";
+                payload "right";
             };
         }
     }
