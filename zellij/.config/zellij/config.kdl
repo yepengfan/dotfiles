@@ -78,6 +78,9 @@ keybinds {
     shared_except "locked" "move" {
         bind "Alt m" { SwitchToMode "move"; }
     }
+    shared_except "locked" "tmux" {
+        unbind "Ctrl b"
+    }
 
     // Pane splitting with | and - (in pane mode)
     pane {
