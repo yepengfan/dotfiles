@@ -77,7 +77,6 @@ keybinds {
     }
     shared_except "locked" "move" {
         bind "Alt m" { SwitchToMode "move"; }
-        unbind "Ctrl h"
     }
 
     // Pane splitting with | and - (in pane mode)
