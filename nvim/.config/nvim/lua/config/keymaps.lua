@@ -2,18 +2,33 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Zellij helpers for Claude Code pane (assumed to the right of Neovim)
+-- Zellij helpers for Claude Code pane (tiled, to the right of Neovim)
 if vim.env.ZELLIJ then
   local function zellij(args)
     vim.fn.system(vim.list_extend({ "zellij", "action" }, args))
   end
 
+  --- Cycle through panes until the focused pane matches the target command.
+  --- Checks dump-layout after each focus-next-pane to verify we landed
+  --- on the right pane, so it works regardless of layout arrangement.
+  local function focus_pane(command)
+    for _ = 1, 10 do
+      zellij({ "focus-next-pane" })
+      local layout = vim.fn.system("zellij action dump-layout")
+      for line in layout:gmatch("[^\n]+") do
+        if line:match('command="' .. command .. '"') and line:match("focus=true") then
+          return
+        end
+      end
+    end
+  end
+
   local function focus_claude()
-    zellij({ "move-focus", "right" })
+    focus_pane("claude")
   end
 
   local function focus_neovim()
-    zellij({ "move-focus", "left" })
+    focus_pane("nvim")
   end
 
   local function write_chars(text)
@@ -38,6 +53,17 @@ if vim.env.ZELLIJ then
     end
     return path
   end
+
+  -- Open Claude Code in a tiled pane to the right
+  vim.keymap.set("n", "<leader>ac", function()
+    vim.fn.system({
+      "zellij", "run",
+      "--direction", "right",
+      "--name", "Claude Code",
+      "--close-on-exit",
+      "--", "zsh", "-ic", "claude",
+    })
+  end, { desc = "Open Claude Code" })
 
   -- Focus Claude pane
   vim.keymap.set("n", "<leader>af", focus_claude, { desc = "Focus Claude pane" })
@@ -65,7 +91,6 @@ if vim.env.ZELLIJ then
     if start_line > end_line then
       start_line, end_line = end_line, start_line
     end
-    -- Exit visual mode before sending
     local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
     vim.api.nvim_feedkeys(esc, "nx", false)
     send_to_claude(path .. ":" .. start_line .. "-" .. end_line)
