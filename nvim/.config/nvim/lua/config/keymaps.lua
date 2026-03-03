@@ -92,6 +92,10 @@ if vim.env.ZELLIJ then
         "--close-on-exit",
         "--", "zsh", "-ic", "claude",
       })
+      -- Shrink Claude pane from 50% to ~25% (new pane is focused after creation)
+      for _ = 1, 5 do
+        zellij({ "resize", "decrease", "left" })
+      end
     end
   end, { desc = "Toggle Claude Code" })
 
