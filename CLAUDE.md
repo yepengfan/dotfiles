@@ -35,7 +35,7 @@ Built on LazyVim with custom plugin configs in `nvim/.config/nvim/lua/plugins/`.
 
 - **Navigation:** `smart-splits.nvim` replaces `vim-tmux-navigator` for unified Ctrl+hjkl across Neovim splits and multiplexer panes (Zellij/tmux). The snacks.nvim terminal `win.keys` must be overridden to route Ctrl+hjkl through smart-splits instead of LazyVim defaults — both are configured in `navigator.lua`.
 - **File explorer:** neo-tree is disabled; snacks explorer is used as a persistent sidebar (`neo-tree.lua`).
-- **Claude Code:** `claudecode.nvim` uses snacks as its terminal provider (`claude-code.lua`). Keybindings are under `<leader>a` prefix.
+- **Claude Code:** Instead of `claudecode.nvim` (disabled), Claude Code runs in a persistent Zellij pane to the right of Neovim. Custom keymaps in `config/keymaps.lua` use `zellij action` CLI commands (`move-focus`, `write-chars`) to interact with the Claude pane. The `<leader>a` prefix is registered via which-key in `claude-code.lua`. A 50ms `vim.defer_fn` delay is needed between focus switch and `write-chars` for Zellij timing.
 - **Plugin disabling pattern:** `{ "plugin/name", enabled = false }` in a plugin spec file.
 
 ### Zsh

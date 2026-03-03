@@ -49,6 +49,36 @@ stow -D */     # Remove all packages
 ## Key Integrations
 
 - **Smart Splits** — seamless `Ctrl+hjkl` navigation between Neovim splits and multiplexer panes (Zellij, tmux)
-- **Claude Code in Neovim** — AI assistant accessible via custom keybindings
+- **Claude Code via Zellij** — AI assistant runs in a persistent Zellij pane with Neovim keymaps to send context
 - **Modern CLI replacements** — `eza` (ls), `bat` (cat), `delta` (diff), `zoxide` (cd), `fzf` (fuzzy finder)
 - **Lazy-loaded NVM** — deferred Node version manager loading for faster shell startup
+
+## Claude Code + Neovim Usage
+
+Claude Code runs in a Zellij pane to the right of Neovim. This setup allows persistent sessions that survive editor restarts, unlike the embedded terminal approach.
+
+### Prerequisites
+
+- Zellij running with at least two panes: Neovim (left) and Claude Code (right)
+
+### Keybindings
+
+All keybindings use the `<leader>a` prefix ("ai" group):
+
+| Keymap | Mode | Description |
+|---|---|---|
+| `<leader>af` | Normal | Focus the Claude Code pane |
+| `<leader>ar` | Normal | Send `file:line` reference to Claude, return to Neovim |
+| `<leader>ab` | Normal | Send the current file path to Claude, return to Neovim |
+| `<leader>as` | Visual | Send selection with file context and fenced code block, return to Neovim |
+
+### Workflow
+
+1. Open Neovim and Claude Code side-by-side in Zellij
+2. Use `<leader>af` to switch focus to Claude at any time
+3. Use `Ctrl+h` to return focus to Neovim (via vim-zellij-navigator)
+4. To share code context, position your cursor or select code in Neovim:
+   - `<leader>ar` — sends a reference like `src/main.lua:42`
+   - `<leader>ab` — sends the file path like `src/main.lua`
+   - `<leader>as` (visual mode) — sends the selection as a fenced code block with file/line header
+5. Text is typed into the Claude input without pressing Enter, so you can review or edit before submitting
