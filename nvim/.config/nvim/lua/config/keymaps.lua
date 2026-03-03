@@ -72,20 +72,20 @@ if vim.env.ZELLIJ then
     return path
   end
 
-  -- Open Claude Code in a tiled pane to the right (guards against duplicates)
+  -- Toggle Claude Code: open if not running, fullscreen toggle if it is
   vim.keymap.set("n", "<leader>ac", function()
     if has_pane("claude") then
-      vim.notify("Claude pane already open, use <leader>af to focus", vim.log.levels.INFO)
-      return
+      zellij({ "toggle-fullscreen" })
+    else
+      vim.fn.system({
+        "zellij", "run",
+        "--direction", "right",
+        "--name", "Claude Code",
+        "--close-on-exit",
+        "--", "zsh", "-ic", "claude",
+      })
     end
-    vim.fn.system({
-      "zellij", "run",
-      "--direction", "right",
-      "--name", "Claude Code",
-      "--close-on-exit",
-      "--", "zsh", "-ic", "claude",
-    })
-  end, { desc = "Open Claude Code" })
+  end, { desc = "Toggle Claude Code" })
 
   -- Focus Claude pane
   vim.keymap.set("n", "<leader>af", focus_claude, { desc = "Focus Claude pane" })
