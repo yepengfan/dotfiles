@@ -79,25 +79,6 @@ if vim.env.ZELLIJ then
     return path
   end
 
-  -- Toggle Claude Code: open if not running, fullscreen toggle if it is
-  vim.keymap.set("n", "<leader>ac", function()
-    local exists = pane_state("claude")
-    if exists then
-      zellij({ "toggle-fullscreen" })
-    else
-      vim.fn.system({
-        "zellij", "run",
-        "--direction", "right",
-        "--name", "Claude Code",
-        "--close-on-exit",
-        "--", "zsh", "-ic", "claude",
-      })
-      -- Shrink Claude pane from 50% to ~25% in a single shell call
-      -- (new pane is focused after creation, resize step ≈ 5% of terminal)
-      vim.fn.system("for i in 1 2 3 4 5; do zellij action resize decrease left; done")
-    end
-  end, { desc = "Toggle Claude Code" })
-
   -- Focus Claude pane
   vim.keymap.set("n", "<leader>af", focus_claude, { desc = "Focus Claude pane" })
 
