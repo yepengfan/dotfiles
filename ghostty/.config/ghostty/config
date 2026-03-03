@@ -15,6 +15,7 @@ macos-titlebar-style = tabs
 cursor-style = block
 cursor-style-blink = false
 shell-integration-features = cursor,sudo,title
+custom-shader = shaders/cursor_tail.glsl
 
 # Clipboard
 copy-on-select = clipboard
