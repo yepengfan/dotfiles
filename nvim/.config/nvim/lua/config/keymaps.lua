@@ -21,7 +21,7 @@ if vim.env.ZELLIJ then
         break
       end
     end
-    local is_fullscreen = layout:match("fullscreen true") ~= nil
+    local is_fullscreen = layout:match("%f[%w]fullscreen true%f[%W]") ~= nil
     return exists, focused, is_fullscreen
   end
 
@@ -59,10 +59,15 @@ if vim.env.ZELLIJ then
   end
 
   --- Focus Claude pane, type text, then return to Neovim.
+  --- Restores fullscreen if it was active before sending.
   local function send_to_claude(text)
+    local _, _, was_fullscreen = pane_state("claude")
     if not focus_claude() then return end
     write_chars(text)
     focus_neovim()
+    if was_fullscreen then
+      zellij({ "toggle-fullscreen" })
+    end
   end
 
   local function buf_path()
