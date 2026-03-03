@@ -8,27 +8,48 @@ if vim.env.ZELLIJ then
     vim.fn.system(vim.list_extend({ "zellij", "action" }, args))
   end
 
+  --- Check if a pane with the given command exists in the current layout.
+  local function has_pane(command)
+    local layout = vim.fn.system("zellij action dump-layout")
+    local pattern = 'command="' .. vim.pesc(command) .. '"'
+    return layout:match(pattern) ~= nil
+  end
+
+  --- Check if the currently focused pane matches the given command.
+  local function focused_pane_is(command)
+    local layout = vim.fn.system("zellij action dump-layout")
+    local pattern = 'command="' .. vim.pesc(command) .. '"'
+    for line in layout:gmatch("[^\n]+") do
+      if line:match(pattern) and line:match("focus=true") then
+        return true
+      end
+    end
+    return false
+  end
+
   --- Cycle through panes until the focused pane matches the target command.
   --- Checks dump-layout after each focus-next-pane to verify we landed
   --- on the right pane, so it works regardless of layout arrangement.
   local function focus_pane(command)
+    if focused_pane_is(command) then return true end
+    if not has_pane(command) then
+      vim.notify("No " .. command .. " pane found", vim.log.levels.WARN)
+      return false
+    end
     for _ = 1, 10 do
       zellij({ "focus-next-pane" })
-      local layout = vim.fn.system("zellij action dump-layout")
-      for line in layout:gmatch("[^\n]+") do
-        if line:match('command="' .. command .. '"') and line:match("focus=true") then
-          return
-        end
-      end
+      if focused_pane_is(command) then return true end
     end
+    vim.notify("Could not focus " .. command .. " pane", vim.log.levels.WARN)
+    return false
   end
 
   local function focus_claude()
-    focus_pane("claude")
+    return focus_pane("claude")
   end
 
   local function focus_neovim()
-    focus_pane("nvim")
+    return focus_pane("nvim")
   end
 
   local function write_chars(text)
@@ -36,13 +57,10 @@ if vim.env.ZELLIJ then
   end
 
   --- Focus Claude pane, type text, then return to Neovim.
-  --- 50ms defer lets Zellij process the focus switch before write-chars.
   local function send_to_claude(text)
-    focus_claude()
-    vim.defer_fn(function()
-      write_chars(text)
-      focus_neovim()
-    end, 50)
+    if not focus_claude() then return end
+    write_chars(text)
+    focus_neovim()
   end
 
   local function buf_path()
@@ -54,8 +72,12 @@ if vim.env.ZELLIJ then
     return path
   end
 
-  -- Open Claude Code in a tiled pane to the right
+  -- Open Claude Code in a tiled pane to the right (guards against duplicates)
   vim.keymap.set("n", "<leader>ac", function()
+    if has_pane("claude") then
+      vim.notify("Claude pane already open, use <leader>af to focus", vim.log.levels.INFO)
+      return
+    end
     vim.fn.system({
       "zellij", "run",
       "--direction", "right",
