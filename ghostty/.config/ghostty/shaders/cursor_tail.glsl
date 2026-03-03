@@ -1,5 +1,5 @@
 // -- CONFIGURATION --
-vec4 TRAIL_COLOR = iCurrentCursorColor; // can change to eg: vec4(0.2, 0.6, 1.0, 0.5);
+const float COLOR_CYCLE_SPEED = 0.3; // hue rotations per second
 const float DURATION = 0.09; // in seconds
 const float MAX_TRAIL_LENGTH = 0.2;
 const float THRESHOLD_MIN_DISTANCE = 1.5; // min distance to show trail (units of cursor width)
@@ -78,6 +78,12 @@ float ease(float x) {
 //     float osc = cos(freq * 6.283185 * x) + (SPRING_DAMPING * sqrt(SPRING_STIFFNESS) / freq) * sin(freq * 6.283185 * x);
 //     return 1.0 - decay * osc;
 // }
+
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
 
 float getSdfRectangle(in vec2 p, in vec2 xy, in vec2 b)
 {
@@ -158,6 +164,8 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
 
      float sdfCurrentCursor = getSdfRectangle(vu, centerCC, currentCursor.zw * 0.5);
 	
+     vec4 trailColor = vec4(hsv2rgb(vec3(fract(iTime * COLOR_CYCLE_SPEED), 0.8, 1.0)), 1.0);
+
      vec4 newColor = vec4(fragColor);
 	
      float minDist = currentCursor.w * THRESHOLD_MIN_DISTANCE;
@@ -222,7 +230,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
         // -- FINAL SELECTING AND DRAWING --
         float sdfTrail = mix(sdfTrail_diag, sdfTrail_rect, isStraightMove);
         
-        vec4 trail = TRAIL_COLOR;
+        vec4 trail = trailColor;
         float trailAlpha = antialising(sdfTrail);
         newColor = mix(newColor, trail, trailAlpha);
 
@@ -233,7 +241,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord){
     // Pulsing glow around cursor
     float glowPulse = 0.5 + 0.5 * sin(iTime * 3.0);
     float glow = exp(-sdfCurrentCursor * 150.0) * glowPulse * 0.6;
-    newColor.rgb += TRAIL_COLOR.rgb * glow;
+    newColor.rgb += trailColor.rgb * glow;
 
     fragColor = newColor;
 }
