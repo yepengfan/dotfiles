@@ -70,7 +70,7 @@ All keybindings use the `<leader>a` prefix ("ai" group):
 | `<leader>af` | Normal | Focus the Claude Code pane |
 | `<leader>ar` | Normal | Send `file:line` reference to Claude, return to Neovim |
 | `<leader>ab` | Normal | Send the current file path to Claude, return to Neovim |
-| `<leader>as` | Visual | Send selection with file context and fenced code block, return to Neovim |
+| `<leader>as` | Visual | Send `file:start-end` range reference to Claude, return to Neovim |
 
 ### Workflow
 
@@ -80,5 +80,5 @@ All keybindings use the `<leader>a` prefix ("ai" group):
 4. To share code context, position your cursor or select code in Neovim:
    - `<leader>ar` — sends a reference like `src/main.lua:42`
    - `<leader>ab` — sends the file path like `src/main.lua`
-   - `<leader>as` (visual mode) — sends the selection as a fenced code block with file/line header
+   - `<leader>as` (visual mode) — sends a `file:start-end` range reference (Claude reads the file itself)
 5. Text is typed into the Claude input without pressing Enter, so you can review or edit before submitting

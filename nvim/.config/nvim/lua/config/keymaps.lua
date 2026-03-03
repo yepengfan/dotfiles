@@ -56,7 +56,7 @@ if vim.env.ZELLIJ then
     send_to_claude(path)
   end, { desc = "Send file path" })
 
-  -- Send visual selection with context
+  -- Send visual selection as file:range reference (Claude reads the file itself)
   vim.keymap.set("v", "<leader>as", function()
     local path = buf_path()
     if not path then return end
@@ -65,12 +65,9 @@ if vim.env.ZELLIJ then
     if start_line > end_line then
       start_line, end_line = end_line, start_line
     end
-    local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-    local header = path .. ":" .. start_line .. "-" .. end_line
-    local text = header .. "\n```\n" .. table.concat(lines, "\n") .. "\n```"
     -- Exit visual mode before sending
     local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
     vim.api.nvim_feedkeys(esc, "nx", false)
-    send_to_claude(text)
+    send_to_claude(path .. ":" .. start_line .. "-" .. end_line)
   end, { desc = "Send selection to Claude" })
 end
