@@ -2,18 +2,56 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Zellij helpers for Claude Code pane (assumed to the right of Neovim)
+-- Zellij helpers for Claude Code pane (tiled, to the right of Neovim)
 if vim.env.ZELLIJ then
   local function zellij(args)
     vim.fn.system(vim.list_extend({ "zellij", "action" }, args))
   end
 
+  --- Parse dump-layout once and return pane state for the given command.
+  --- Returns: exists (bool), focused (bool), is_fullscreen (bool)
+  local function pane_state(command)
+    local layout = vim.fn.system("zellij action dump-layout")
+    local pattern = 'command="' .. vim.pesc(command) .. '"'
+    local exists = layout:match(pattern) ~= nil
+    local focused = false
+    for line in layout:gmatch("[^\n]+") do
+      if line:match(pattern) and line:match("focus=true") then
+        focused = true
+        break
+      end
+    end
+    local is_fullscreen = layout:match("%f[%w]fullscreen true%f[%W]") ~= nil
+    return exists, focused, is_fullscreen
+  end
+
+  --- Cycle through panes until the focused pane matches the target command.
+  --- Exits fullscreen first if needed so all panes are reachable.
+  local function focus_pane(command)
+    local exists, focused, is_fullscreen = pane_state(command)
+    if focused then return true end
+    if not exists then
+      vim.notify("No " .. command .. " pane found", vim.log.levels.WARN)
+      return false
+    end
+    if is_fullscreen then
+      zellij({ "toggle-fullscreen" })
+    end
+    for _ = 1, 10 do
+      zellij({ "focus-next-pane" })
+      local _, is_focused = pane_state(command)
+      if is_focused then return true end
+    end
+    vim.notify("Could not focus " .. command .. " pane", vim.log.levels.WARN)
+    return false
+  end
+
   local function focus_claude()
-    zellij({ "move-focus", "right" })
+    return focus_pane("claude")
   end
 
   local function focus_neovim()
-    zellij({ "move-focus", "left" })
+    return focus_pane("nvim")
   end
 
   local function write_chars(text)
@@ -21,13 +59,15 @@ if vim.env.ZELLIJ then
   end
 
   --- Focus Claude pane, type text, then return to Neovim.
-  --- 50ms defer lets Zellij process the focus switch before write-chars.
+  --- Restores fullscreen if it was active before sending.
   local function send_to_claude(text)
-    focus_claude()
-    vim.defer_fn(function()
-      write_chars(text)
-      focus_neovim()
-    end, 50)
+    local _, _, was_fullscreen = pane_state("claude")
+    if not focus_claude() then return end
+    write_chars(text)
+    focus_neovim()
+    if was_fullscreen then
+      zellij({ "toggle-fullscreen" })
+    end
   end
 
   local function buf_path()
@@ -38,6 +78,22 @@ if vim.env.ZELLIJ then
     end
     return path
   end
+
+  -- Toggle Claude Code: open if not running, fullscreen toggle if it is
+  vim.keymap.set("n", "<leader>ac", function()
+    local exists = pane_state("claude")
+    if exists then
+      zellij({ "toggle-fullscreen" })
+    else
+      vim.fn.system({
+        "zellij", "run",
+        "--direction", "right",
+        "--name", "Claude Code",
+        "--close-on-exit",
+        "--", "zsh", "-ic", "claude",
+      })
+    end
+  end, { desc = "Toggle Claude Code" })
 
   -- Focus Claude pane
   vim.keymap.set("n", "<leader>af", focus_claude, { desc = "Focus Claude pane" })
@@ -65,7 +121,6 @@ if vim.env.ZELLIJ then
     if start_line > end_line then
       start_line, end_line = end_line, start_line
     end
-    -- Exit visual mode before sending
     local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
     vim.api.nvim_feedkeys(esc, "nx", false)
     send_to_claude(path .. ":" .. start_line .. "-" .. end_line)
