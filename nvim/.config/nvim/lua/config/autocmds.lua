@@ -6,3 +6,15 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+
+-- Force redraw when switching to/from terminal buffers (fixes garbled text
+-- and blank content in Claude Code terminal after navigating between splits)
+vim.api.nvim_create_autocmd({ "TermEnter", "TermLeave" }, {
+  group = vim.api.nvim_create_augroup("terminal_redraw", { clear = true }),
+  pattern = "term://*",
+  callback = function()
+    vim.schedule(function()
+      vim.cmd("mode")
+    end)
+  end,
+})
