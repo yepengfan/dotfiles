@@ -64,6 +64,10 @@ keybinds {
         // Direct pane splitting (no mode needed)
         bind "Alt \\" { NewPane "right"; }
         bind "Alt enter" { NewPane "down"; }
+
+        // Unbind Alt+arrows to prevent accidental actions and restore
+        // Option+arrow word-jumping in the shell
+        unbind "Alt Left" "Alt Right" "Alt Up" "Alt Down"
     }
 
     // Rebind mode keys to Alt (frees Ctrl+p/n for shell history)
