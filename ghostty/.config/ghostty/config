@@ -26,6 +26,10 @@ mouse-hide-while-typing = true
 
 # Keyboard
 macos-option-as-alt = left
+# Send proper Alt+Arrow CSI sequences instead of \ef/\eb (word-jump sequences)
+# which Zellij intercepts as Alt+f/b and triggers unintended actions.
+keybind = opt+right=text:\x1b[1;3C
+keybind = opt+left=text:\x1b[1;3D
 
 # Misc
 confirm-close-surface = false

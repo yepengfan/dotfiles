@@ -45,7 +45,6 @@ export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL="nvim"
 export LANG=en_US.UTF-8
-export ANTHROPIC_MODEL="claude-opus-4-6"
 
 # --- NVM (lazy-loaded for faster startup) ---
 export NVM_DIR="$HOME/.nvm"
@@ -94,6 +93,10 @@ source <(fzf --zsh)
 # Restore default history navigation (overridden by plugins)
 bindkey '^P' up-line-or-history
 bindkey '^N' down-line-or-history
+
+# Option+arrow word navigation (Ghostty sends Alt+Arrow CSI sequences)
+bindkey '\e[1;3C' forward-word
+bindkey '\e[1;3D' backward-word
 
 # --- Kiro ---
 [[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
