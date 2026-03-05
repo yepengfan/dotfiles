@@ -12,6 +12,7 @@ return {
             auto_close = false,
             jump = { close = false },
             layout = { preset = "sidebar", preview = false },
+            follow_file = false,
           },
         },
       },

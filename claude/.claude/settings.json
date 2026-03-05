@@ -1,7 +1,8 @@
 {
+  "model": "sonnet",
   "statusLine": {
     "type": "command",
-    "command": "bash /Users/tedfan/.claude/statusline-command.sh",
+    "command": "bash $HOME/.claude/statusline-command.sh",
     "padding": 0
   },
   "enabledPlugins": {
