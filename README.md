@@ -14,7 +14,7 @@ Personal development environment managed with [GNU Stow](https://www.gnu.org/sof
 | `nvim` | [Neovim](https://neovim.io/) | Editor powered by [LazyVim](https://www.lazyvim.org/) |
 | `starship` | [Starship](https://starship.rs/) | Minimal cross-shell prompt |
 | `tmux` | [tmux](https://github.com/tmux/tmux) | Terminal multiplexer |
-| `yazi` | [yazi](https://github.com/sxyazi/yazi) | TUI file browser |
+| `yazi` | [yazi](https://github.com/sxyazi/yazi) | TUI file browser (requires `chafa` for image preview in Zellij) |
 | `zellij` | [Zellij](https://zellij.dev/) | Terminal multiplexer (tmux alternative) |
 | `zsh` | [Zsh](https://www.zsh.org/) | Shell config with aliases and plugins |
 
