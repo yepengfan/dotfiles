@@ -14,6 +14,7 @@ Personal development environment managed with [GNU Stow](https://www.gnu.org/sof
 | `nvim` | [Neovim](https://neovim.io/) | Editor powered by [LazyVim](https://www.lazyvim.org/) |
 | `starship` | [Starship](https://starship.rs/) | Minimal cross-shell prompt |
 | `tmux` | [tmux](https://github.com/tmux/tmux) | Terminal multiplexer |
+| `yazi` | [yazi](https://github.com/sxyazi/yazi) | TUI file browser |
 | `zellij` | [Zellij](https://zellij.dev/) | Terminal multiplexer (tmux alternative) |
 | `zsh` | [Zsh](https://www.zsh.org/) | Shell config with aliases and plugins |
 
@@ -52,6 +53,10 @@ stow -D */     # Remove all packages
 - **Claude Code via Zellij** — AI assistant runs in a persistent Zellij pane with Neovim keymaps to send context
 - **Modern CLI replacements** — `eza` (ls), `bat` (cat), `delta` (diff), `zoxide` (cd), `fzf` (fuzzy finder)
 - **Lazy-loaded NVM** — deferred Node version manager loading for faster shell startup
+
+### Yazi
+
+Image preview is disabled because Zellij does not fully support terminal graphics protocols (Kitty, Sixel). Yazi's OSC 10/11 color queries leak through Zellij as a visible `Shell:` dialog ([zellij#3590](https://github.com/zellij-org/zellij/issues/3590)). To avoid this, image previews are set to `noop` in `yazi.toml`. Re-enable when Zellij fixes graphics passthrough.
 
 ## Claude Code + Neovim Usage
 
