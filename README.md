@@ -12,6 +12,7 @@ Personal development environment managed with [GNU Stow](https://www.gnu.org/sof
 | `git` | [Git](https://git-scm.com/) | Git config with [delta](https://github.com/dandavella/delta) pager and LFS |
 | `lazygit` | [lazygit](https://github.com/jesseduffield/lazygit) | Git TUI client |
 | `nvim` | [Neovim](https://neovim.io/) | Editor powered by [LazyVim](https://www.lazyvim.org/) |
+| `yazi` | [yazi](https://github.com/sxyazi/yazi) | TUI file browser |
 | `starship` | [Starship](https://starship.rs/) | Minimal cross-shell prompt |
 | `tmux` | [tmux](https://github.com/tmux/tmux) | Terminal multiplexer |
 | `zellij` | [Zellij](https://zellij.dev/) | Terminal multiplexer (tmux alternative) |
