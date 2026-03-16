@@ -62,8 +62,8 @@ keybinds {
         bind "Alt ]" { NextSwapLayout; }
 
         // Direct pane splitting (no mode needed)
-        bind "Alt \\" { NewPane "right"; }
-        bind "Alt enter" { NewPane "down"; }
+        bind "Alt \\" { NewPane "right"; SwitchToMode "normal"; }
+        bind "Alt enter" { NewPane "down"; SwitchToMode "normal"; }
 
         // Unbind Alt+arrows to prevent accidental actions and restore
         // Option+arrow word-jumping in the shell
