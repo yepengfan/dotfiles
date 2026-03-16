@@ -94,7 +94,7 @@ keybinds {
     // Pane splitting with | and - (in pane mode)
     pane {
         bind "Alt p" { SwitchToMode "normal"; }
-        bind "|" { NewPane "right"; }
-        bind "-" { NewPane "down"; }
+        bind "|" { NewPane "right"; SwitchToMode "normal"; }
+        bind "-" { NewPane "down"; SwitchToMode "normal"; }
     }
 }
