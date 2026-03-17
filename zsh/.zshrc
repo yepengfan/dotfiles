@@ -57,6 +57,14 @@ nvm() {
 node() { nvm --version >/dev/null 2>&1; unfunction node 2>/dev/null; command node "$@"; }
 npm()  { nvm --version >/dev/null 2>&1; unfunction npm 2>/dev/null;  command npm "$@"; }
 npx()  { nvm --version >/dev/null 2>&1; unfunction npx 2>/dev/null;  command npx "$@"; }
+# Add default node to PATH so non-shell tools (e.g., VS Code, shebang scripts) can
+# find node without triggering the lazy-load wrappers above.
+_nvm_default_alias=$(cat "$NVM_DIR/alias/default" 2>/dev/null)
+if [[ -n "$_nvm_default_alias" ]]; then
+  _nvm_default_dir=("$NVM_DIR/versions/node/v${_nvm_default_alias}"*(Nn[1]))
+  [[ -n "$_nvm_default_dir" ]] && export PATH="${_nvm_default_dir}/bin:$PATH"
+fi
+unset _nvm_default_alias _nvm_default_dir
 
 # --- Bun ---
 export BUN_INSTALL="$HOME/.bun"
@@ -103,3 +111,4 @@ bindkey '\e[1;3D' backward-word
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
