@@ -57,6 +57,7 @@ nvm() {
 node() { nvm --version >/dev/null 2>&1; unfunction node 2>/dev/null; command node "$@"; }
 npm()  { nvm --version >/dev/null 2>&1; unfunction npm 2>/dev/null;  command npm "$@"; }
 npx()  { nvm --version >/dev/null 2>&1; unfunction npx 2>/dev/null;  command npx "$@"; }
+export PATH="$HOME/.nvm/versions/node/v24.4.1/bin:$PATH"
 
 # --- Bun ---
 export BUN_INSTALL="$HOME/.bun"
@@ -103,3 +104,4 @@ bindkey '\e[1;3D' backward-word
 
 # Kiro CLI post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
+
