@@ -86,9 +86,9 @@ keybinds {
         unbind "Ctrl b"
     }
 
-    // Disable Ctrl+q to prevent accidental workspace close
+    // Disable Ctrl+o/q — use Alt keys for mode switching instead
     shared_except "locked" "session" {
-        unbind "Ctrl q"
+        unbind "Ctrl o" "Ctrl q"
     }
 
     // Pane splitting with | and - (in pane mode)
