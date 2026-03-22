@@ -1,6 +1,6 @@
 [user]
-	name = Ted Fan
-	email = ted.fan@flightcentre.com
+	name = Yepeng Fan
+	email = ted.fan@ciandt.com
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
