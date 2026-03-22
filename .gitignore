@@ -1,3 +1,4 @@
 tmux/.config/tmux/plugins/
 yazi/.config/yazi/flavors/
 yazi/.config/yazi/package.toml
+zsh/.zsh/secrets.zsh

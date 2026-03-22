@@ -26,6 +26,7 @@ alias ....="cd ../../.."
 # --- Editor ---
 alias v="nvim"
 alias vim="nvim"
+alias typora="/Applications/Typora.app/Contents/MacOS/Typora"
 
 # --- Misc ---
 alias pip="pip3"
