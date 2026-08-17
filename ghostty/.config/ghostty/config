@@ -30,6 +30,10 @@ macos-option-as-alt = left
 # which Zellij intercepts as Alt+f/b and triggers unintended actions.
 keybind = opt+right=text:\x1b[1;3C
 keybind = opt+left=text:\x1b[1;3D
+# Disable Cmd+W (and Cmd+Shift+W) to prevent accidentally closing the
+# surface/tab/window; Zellij/tmux sessions have their own close keybinds.
+keybind = super+w=ignore
+keybind = super+shift+w=ignore
 
 # Misc
 confirm-close-surface = false
