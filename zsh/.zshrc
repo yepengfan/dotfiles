@@ -115,3 +115,9 @@ bindkey '\e[1;3D' backward-word
 
 # CI&T Claude Code Configuration (secrets kept out of git)
 [[ -f "$HOME/.zsh/secrets.zsh" ]] && source "$HOME/.zsh/secrets.zsh"
+
+# Infomedia Nexus workspace
+alias nexus='/Users/tedfan/Developer/infomedia-nexus/nexus'
+
+alias claude-mem='bun "/Users/tedfan/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-cli.js" start'
+
