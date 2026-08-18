@@ -119,5 +119,5 @@ bindkey '\e[1;3D' backward-word
 # Infomedia Nexus workspace
 alias nexus='/Users/tedfan/Developer/infomedia-nexus/nexus'
 
-alias claude-mem='bun "/Users/tedfan/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+alias claude-mem='bun "/Users/tedfan/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-cli.js" start'
 
