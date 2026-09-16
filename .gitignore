@@ -4,3 +4,6 @@ yazi/.config/yazi/package.toml
 zsh/.zsh/secrets.zsh
 .omc/
 .lavish/
+
+# Claude Code local machine state (permission allow-list); not shared config
+.claude/
