@@ -1,6 +1,12 @@
 # Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
 
+# Determinate Nix did not patch /etc/zshrc on this machine, so load the
+# daemon profile here. Guarded so it is a no-op when Nix is not installed.
+if [[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
 # --- Zellij Auto-Start ---
 if [[ -x /opt/homebrew/bin/zellij && -z "$ZELLIJ" && -t 0 ]]; then
   exec /opt/homebrew/bin/zellij
@@ -121,3 +127,6 @@ alias nexus='/Users/tedfan/Developer/infomedia-nexus/nexus'
 
 alias claude-mem='bun "/Users/tedfan/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-cli.js" start'
 
+
+# treehouse worktree pool (out of home root, out of any git repo)
+export TREEHOUSE_ROOT="$HOME/Developer/treehouse-pool"
