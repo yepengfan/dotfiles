@@ -1,0 +1,47 @@
+---
+description: Human-facing docs and reviews go through Lavish pages, not chat dumps
+alwaysApply: true
+---
+
+# Human review = Lavish
+
+Anything a human must **read, comment on, or decide** is presented as a **Lavish HTML page**, not as a long markdown dump in chat. Chat stays for status, questions, and short answers.
+
+## When it applies
+
+Use Lavish for: plans, purposes, ADRs, diffs, decision checklists, design/skeleton docs, construction plans, gates, and any "please confirm / review this" artifact.
+
+Do **not** use Lavish for: one-bit clarifications (`AskQuestion`), git plumbing, secrets, or when the user says chat-only.
+
+## How
+
+1. Write `.lavish/<short-name>.html` (DaisyUI `data-theme="luxury"`, Tailwind v4 browser CDN). Layout: `box-sizing:border-box`; flex/grid children `min-width:0`; text `overflow-wrap:anywhere`.
+2. Open: `lavish-axi .lavish/<short-name>.html` (or `npx -y lavish-axi` if not on PATH).
+3. Poll until feedback or `session_ended`. After edits, `poll --agent-reply "…"`. Do not reopen an ended session unless the user asks or something must be seen.
+4. Put **decisions in a form** that `queuePrompt`s structured `data` (radios + notes). Annotations on the page are first-class feedback — apply them to the HTML so the page stays up to date before locking.
+5. **Do not write or commit durable files** (docs, ADRs, rules, schema) until the user submits the gate / says to apply. Show a diff page when the change is large.
+
+## Traceability — every decision lands in the ledger (when the repo has one)
+
+Undocumented decisions rot a workflow. **If the current repo has a decision ledger** (e.g. `docs/agentic-engineering/DECISIONS.md` or another append-only decision log), every human decision made through a Lavish gate MUST be appended to it.
+
+- One row per decision: `# · date · decision · rationale · evidence(commit/file) · source(Lavish page)`.
+- **Append-only**: never rewrite a past row. If a decision is changed/overturned, add a new row that `refines`/`supersedes` the old one; keep the old row.
+- Record even "small" decisions (tool location, naming, sequencing).
+- Do it in the same commit as (or immediately after) applying the decision, and reference the commit hash so it's traceable on the PR.
+- If the repo has **no** ledger, do not fabricate one; keep decisions in the PR/plan and only start a ledger if the user asks.
+
+## Staying connected while polling
+
+`lavish-axi poll` long-polls and may be backgrounded by the harness at ~30s. Do **not** "fire and forget" — after opening/replying, actively block on the poll (harness wait facility) until `status: feedback` / `session_ended`, so the user never has to poke chat to get you to notice their submission.
+
+## Anti-patterns
+
+```
+❌ Paste a 200-line plan in chat and ask "OK?"
+❌ Edit durable docs / ADRs / plans because chat sounded positive
+❌ Leave the Lavish page stale after the user commented
+❌ Make a decision on a Lavish gate and NOT log it when the repo has a ledger
+❌ Send an --agent-reply then end the turn without awaiting the poll
+✅ Open a Lavish page, wait for queued feedback or the form, then apply + log the decision
+```
