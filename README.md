@@ -105,14 +105,19 @@ If you clone it, review these before you run `bootstrap.sh`:
 **Git identity:** the shared Home Manager module leaves this unset. This fork's
 host declares the author name/email in `hosts/tedfan/identity.nix`.
 
-**Homebrew cleanup warning:** `configuration.nix` sets `homebrew.onActivation.cleanup = "zap"`.
-That means every time you switch, Homebrew removes any package or cask on your machine that isn't listed in the `brews` and `casks` arrays in `configuration.nix`.
-If you already have Homebrew stuff installed that isn't in that list, the first switch will uninstall it.
-Read through `brews` and `casks` before you run `bootstrap.sh` or `rebuild.sh` for the first time, and add anything you want to keep.
+**Homebrew cleanup warning:** the shared `configuration.nix` enables
+`homebrew.onActivation.cleanup = "zap"`. This fork's active inventory is the
+`brews` and `casks` lists in [`hosts/tedfan/darwin.nix`](hosts/tedfan/darwin.nix).
+Those lists use `lib.mkForce` and replace the shared lists in `configuration.nix`.
 
-**About `herdr`:** it's in the `brews` list.
-It's a real public Homebrew formula (`brew info herdr` finds it in homebrew-core, no tap needed), so it will install fine.
-If you don't use it, just remove it from `brews` in your copy.
+Before running `bootstrap.sh` or `rebuild.sh`, add every formula and cask you
+want to keep to **`hosts/tedfan/darwin.nix`**. Adding it only to the shared
+`configuration.nix` will not retain it: the next switch can uninstall anything
+absent from the host inventory. Review the cleanup preview described in the
+[fork maintenance guide](docs/fork-maintenance.md) before applying inventory changes.
+
+**About `herdr`:** it is declared in the host's `brews` list in
+`hosts/tedfan/darwin.nix`. If you do not use it, remove it from that host list.
 
 **Heads-up:**
 
@@ -123,7 +128,8 @@ If you don't use it, just remove it from `brews` in your copy.
 
 - `flake.nix` - the entry point.
   Wires up nixpkgs, nix-darwin, home-manager, and nix-homebrew, and declares the `mac` machine.
-- `configuration.nix` - system-level config: macOS defaults, Homebrew.
+- `configuration.nix` - shared system defaults from upstream.
+- `hosts/tedfan/darwin.nix` - this Mac's Homebrew inventory and system overrides.
 - `home.nix` - user-level config: shell, packages, prompt, and the symlinks described below.
 - `rebuild.sh` - re-applies the config after the first switch.
   Run this every time you make a change.
