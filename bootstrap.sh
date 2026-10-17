@@ -27,26 +27,27 @@ if [[ "$DIR" != "$HOME/.dotfiles" ]]; then
 fi
 
 echo "==> Step 3: personalize the configured username"
+IDENTITY_FILE="$DIR/hosts/tedfan/identity.nix"
 # Do this before any sudo call: sudo resets $USER to root, so whoami has to
 # run as the real interactive user first.
 REAL_USER="$(whoami)"
-FLAKE_USER="$(sed -nE 's/^[[:space:]]*macUser = "([^"]+)";.*/\1/p' "$DIR/flake.nix" | head -n1)"
+FLAKE_USER="$(sed -nE 's/^[[:space:]]*macUser = "([^"]+)";.*/\1/p' "$IDENTITY_FILE" | head -n1)"
 if [ -z "$FLAKE_USER" ]; then
-  echo "    Could not find the single \"macUser = \" line in flake.nix."
-  echo "    Edit flake.nix yourself before continuing."
+  echo "    Could not find the single \"macUser = \" line in hosts/tedfan/identity.nix."
+  echo "    Edit hosts/tedfan/identity.nix yourself before continuing."
   exit 1
 elif [ "$FLAKE_USER" != "$REAL_USER" ]; then
-  echo "    flake.nix is configured for user \"$FLAKE_USER\", but you are \"$REAL_USER\"."
-  read -r -p "    Rewrite flake.nix's \"macUser = \" line to \"$REAL_USER\"? [y/N] " REPLY
+  echo "    identity.nix is configured for user \"$FLAKE_USER\", but you are \"$REAL_USER\"."
+  read -r -p "    Rewrite identity.nix's \"macUser = \" line to \"$REAL_USER\"? [y/N] " REPLY
   if [ "$REPLY" = "y" ] || [ "$REPLY" = "Y" ]; then
-    sed -i '' -E "s/^([[:space:]]*macUser = \")[^\"]+(\";.*)/\1${REAL_USER}\2/" "$DIR/flake.nix"
-    echo "    Updated. Review the change with: git diff flake.nix"
+    sed -i '' -E "s/^([[:space:]]*macUser = \")[^\"]+(\";.*)/\1${REAL_USER}\2/" "$IDENTITY_FILE"
+    echo "    Updated. Review the change with: git diff hosts/tedfan/identity.nix"
   else
-    echo "    Skipped. Edit the single \"macUser = \" line in flake.nix yourself before continuing."
+    echo "    Skipped. Edit the single \"macUser = \" line in hosts/tedfan/identity.nix yourself before continuing."
     exit 1
   fi
 else
-  echo "    flake.nix already matches \"$REAL_USER\", nothing to do."
+  echo "    identity.nix already matches \"$REAL_USER\", nothing to do."
 fi
 
 echo "==> Step 4: first darwin-rebuild switch (pinned to nix-darwin-26.05)"

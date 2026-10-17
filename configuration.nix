@@ -1,4 +1,4 @@
-{ pkgs, macUser, githubUser, ... }:
+{ user, ... }:
 
 {
   # Determinate already manages the Nix daemon, so nix-darwin shouldn't.
@@ -7,9 +7,9 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.hostPlatform = "aarch64-darwin"; # use x86_64-darwin for Intel CPU
 
-  system.primaryUser = macUser;
-  users.users.${macUser} = {
-    home = "/Users/${macUser}";
+  system.primaryUser = user;
+  users.users.${user} = {
+    home = "/Users/${user}";
   };
   system.stateVersion = 6;
   system.defaults = {
@@ -27,100 +27,19 @@
   };
   nix-homebrew = {
     enable = true;
-    user = macUser;
-    autoMigrate = true;
-    # Keep the maintained Reasonix cask in the same revision as this config.
-    taps."${githubUser}/homebrew-dotfiles" = pkgs.runCommandLocal "dotfiles-homebrew-tap" {} ''
-      mkdir -p "$out"
-      cp -R ${./homebrew}/. "$out/"
-    '';
+    inherit user;
   };
   homebrew = {
     enable = true;
-    # All existing user-installed tools are declared before enabling cleanup.
-    onActivation.cleanup = "zap";
-    # Update tools deliberately, separately from applying machine settings.
-    onActivation.autoUpdate = false;
-    onActivation.upgrade = false;
+    onActivation.cleanup = "zap";  # remove anything not listed here
+    onActivation.autoUpdate = true;
     onActivation.extraFlags = [ "--force" ];
-    taps = [
-      "azure/functions"
-      "databricks/tap"
-      "wxtsky/tap"
-      "${githubUser}/dotfiles"
-    ];
     brews = [
-      "aws-vault"
-      "awscli"
-      "azure-cli"
-      "azure/functions/azure-functions-core-tools@4"
-      "bat"
-      "chafa"
-      "colima"
-      "databricks/tap/databricks"
-      "direnv"
-      "docker"
-      "docker-compose"
-      "eza"
-      "fd"
-      { name = "ffmpeg-full"; link = true; }
-      "fzf"
-      "gh"
-      "git"
-      "git-delta"
-      "git-filter-repo"
-      "git-gui"
-      "gitleaks"
       "herdr"
-      { name = "imagemagick-full"; link = true; }
-      "jq"
-      "k9s"
-      "lazygit"
-      "libpq"
-      "libtiff"
-      "minikube"
-      "mkcert"
-      "mysql-client"
-      "neovim"
-      "nss"
-      { name = "openssl@3"; link = true; }
-      "p7zip"
-      "php@8.1"
-      "pipx"
-      "poppler"
-      "pyenv"
-      "resvg"
-      "ripgrep"
-      "saml2aws"
-      "sevenzip"
-      "starship"
-      "stow"
-      "tig"
-      "tmux"
-      "uv"
-      "watch"
-      "watchman"
-      "yarn"
-      "yazi"
-      "yq"
-      "zellij"
-      "zoxide"
     ];
     casks = [
-      "claude-code"
-      "codex"
-      "codexbar"
-      "${githubUser}/dotfiles/reasonix"
-      "font-jetbrains-mono-nerd-font"
-      "font-symbols-only-nerd-font"
-      "jordanbaird-ice"
-      "maccy"
-      "macfuse"
-      "opensuperwhisper"
-      "session-manager-plugin"
       "wezterm"
-      "wxtsky/tap/codeisland"
-      "zulu@17"
+      "claude-code"
     ];
   };
 }

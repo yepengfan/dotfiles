@@ -140,9 +140,12 @@ test_zero_coupling_and_state_file() {
 }
 
 test_static_typescript_and_repo_wiring() {
-  # Pi resources remain available, but this workstation does not enable Pi.
-  assert_not_contains "$(cat "$ROOT/home.nix")" 'home.file.".pi/' \
-    "home.nix unexpectedly enables optional Pi resources"
+  # Home Manager links the extensions directory as a whole, so the calm
+  # subdirectory auto-loads without any new declaration.
+  grep -q 'home.file.".pi/agent/extensions".source =' "$ROOT/home.nix" \
+    || fail "home.nix no longer links ~/.pi/agent/extensions as a directory"
+  grep -q "mkOutOfStoreSymlink \"\${dotfiles}/home/.pi/agent/extensions\"" "$ROOT/home.nix" \
+    || fail "home.nix changed the Pi extensions link target"
   [ -f "$CALM_DIR/index.ts" ] || fail "calm extension entry point missing"
   [ -f "$CALM_DIR/LICENSE" ] || fail "calm license file missing"
 
@@ -180,7 +183,7 @@ JSON
       || fail "Pi Calm extension does not typecheck under strict TypeScript"
   fi
 
-  pass "optional-resource wiring and existing JavaScript syntax verified"
+  pass "static wiring: Home Manager auto-load intact, TypeScript typechecks, existing JS extension parses"
 }
 
 test_preference_and_command() {
