@@ -54,6 +54,15 @@ If `upstream` is absent:
 git remote add upstream https://github.com/kunchenguid/dotfiles.git
 ```
 
+Keep pull requests targeted at this fork after adding `upstream`:
+
+```sh
+gh repo set-default yepengfan/dotfiles
+```
+
+GitHub CLI can otherwise prefer the parent repository when resolving a fork's
+remotes. This setting affects PR targeting, not which commits Git merges.
+
 ## Review an upstream update
 
 Start with a clean checkout. Choose a new branch name for each sync:
