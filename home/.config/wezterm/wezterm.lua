@@ -3,7 +3,11 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.color_scheme = "rose-pine-moon"
-config.font = wezterm.font("Hack Nerd Font")
+-- Hack Nerd Font for latin/glyphs, PingFang SC fallback so CJK never tofus.
+config.font = wezterm.font_with_fallback({
+	"Hack Nerd Font",
+	"PingFang SC",
+})
 config.font_size = 15.0
 config.window_background_opacity = 0.8
 config.macos_window_background_blur = 50

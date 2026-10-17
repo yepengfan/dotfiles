@@ -1,4 +1,4 @@
-{ user, ... }:
+{ pkgs, user, ... }:
 
 {
   # Determinate already manages the Nix daemon, so nix-darwin shouldn't.
@@ -28,6 +28,12 @@
   nix-homebrew = {
     enable = true;
     inherit user;
+    autoMigrate = true;
+    # Keep the maintained Reasonix cask in the same revision as this config.
+    taps."yepengfan/homebrew-dotfiles" = pkgs.runCommandLocal "dotfiles-homebrew-tap" {} ''
+      mkdir -p "$out"
+      cp -R ${./homebrew}/. "$out/"
+    '';
   };
   homebrew = {
     enable = true;
@@ -40,8 +46,8 @@
     taps = [
       "azure/functions"
       "databricks/tap"
-      "esengine/reasonix"
       "wxtsky/tap"
+      "yepengfan/dotfiles"
     ];
     brews = [
       "aws-vault"
@@ -104,7 +110,7 @@
       "claude-code"
       "codex"
       "codexbar"
-      "esengine/reasonix/reasonix"
+      "yepengfan/dotfiles/reasonix"
       "font-jetbrains-mono-nerd-font"
       "font-symbols-only-nerd-font"
       "jordanbaird-ice"

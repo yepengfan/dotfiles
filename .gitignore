@@ -17,3 +17,8 @@ result-*
 
 # no-mistakes local validation state - never commit in this public repo
 .no-mistakes/
+
+# Credentials and local application state never belong in this repository
+/home/.zsh/secrets.zsh
+/home/.config/no-mistakes/*.env
+/home/.config/herdr/release-notes.json

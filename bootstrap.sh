@@ -18,7 +18,13 @@ fi
 echo "==> Step 2: symlink this repo to ~/.dotfiles"
 # home.nix resolves its mkOutOfStoreSymlink paths through ~/.dotfiles, so this
 # has to exist before the first switch or the build will fail to find them.
-ln -sfn "$DIR" ~/.dotfiles
+if [[ "$DIR" != "$HOME/.dotfiles" ]]; then
+  if [[ -e "$HOME/.dotfiles" && ! -L "$HOME/.dotfiles" ]]; then
+    echo "    ~/.dotfiles is an existing directory; back it up before bootstrapping another checkout." >&2
+    exit 1
+  fi
+  ln -sfn "$DIR" "$HOME/.dotfiles"
+fi
 
 echo "==> Step 3: personalize the configured username"
 # Do this before any sudo call: sudo resets $USER to root, so whoami has to
@@ -55,7 +61,7 @@ echo "==> Step 4: first darwin-rebuild switch (pinned to nix-darwin-26.05)"
 NIX_BIN="$(command -v nix)"
 # "mac" is the flake host label - if you renamed it, change it in flake.nix
 # and rebuild.sh too.
-sudo "$NIX_BIN" run github:nix-darwin/nix-darwin/nix-darwin-26.05#darwin-rebuild -- \
+sudo "$NIX_BIN" --extra-experimental-features 'nix-command flakes' run github:nix-darwin/nix-darwin/nix-darwin-26.05#darwin-rebuild -- \
   switch --flake ~/.dotfiles#mac
 # If this still fails with "nix: command not found", open a new terminal
 # (Determinate adds nix to new shells' PATH) and re-run ./bootstrap.sh.
