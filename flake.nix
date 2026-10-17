@@ -16,25 +16,25 @@
 
   outputs = inputs@{ self, nix-darwin, nix-homebrew, home-manager, nixpkgs }:
     let
-      # Local macOS account, used for /Users/<name> and Home Manager.
-      # bootstrap.sh offers to rewrite this when the local account differs.
-      macUser = "tedfan";
-      # GitHub identity, used for this repository's maintained Homebrew tap.
-      githubUser = "yepengfan";
+      identity = import ./hosts/tedfan/identity.nix;
+      user = identity.macUser;
     in
     {
       darwinConfigurations."mac" = nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit macUser githubUser; };
+        specialArgs = { inherit user; };
         modules = [
           ./configuration.nix
+          ./hosts/tedfan/darwin.nix
           nix-homebrew.darwinModules.nix-homebrew
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "hm-bak";
-            home-manager.extraSpecialArgs = { inherit macUser; };
-            home-manager.users.${macUser} = import ./home.nix;
+            home-manager.extraSpecialArgs = { inherit user; };
+            home-manager.users.${user}.imports = [
+              ./home.nix
+              ./hosts/tedfan/home.nix
+            ];
           }
         ];
       };
