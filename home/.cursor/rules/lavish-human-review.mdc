@@ -1,0 +1,58 @@
+---
+description: Human-facing docs and reviews go through Lavish pages, not chat dumps
+alwaysApply: true
+---
+
+# Human review = Lavish
+
+Anything a human must **read, comment on, or decide** is presented as a **Lavish HTML page**, not as a long markdown dump in chat. Chat stays for status, questions, and short answers.
+
+## When it applies
+
+Use Lavish for: plans, purposes, ADRs, diffs, decision checklists, design/skeleton docs, construction plans, gates, and any "please confirm / review this" artifact.
+
+Do **not** use Lavish for: one-bit clarifications (`AskQuestion`), git plumbing, secrets, or when the user says chat-only.
+
+## How
+
+1. Write `.lavish/<short-name>.html` (DaisyUI `data-theme="luxury"`, Tailwind v4 browser CDN). Layout: `box-sizing:border-box`; flex/grid children `min-width:0`; text `overflow-wrap:anywhere`.
+2. Open: `lavish-axi .lavish/<short-name>.html` (or `npx -y lavish-axi` if not on PATH).
+3. Poll until `session_ended` (see MUST below). After edits, `poll --agent-reply "…"` then poll again. Do not reopen an **ended** session unless the user asks or something must be seen. `browser_disconnected` is not ended.
+4. Put **decisions in a form** that `queuePrompt`s structured `data` (radios + notes). Annotations on the page are first-class feedback - apply them to the HTML so the page stays up to date before locking.
+5. **Do not write or commit durable files** (docs, ADRs, rules, schema) until the user submits the gate / says to apply. Show a diff page when the change is large.
+
+## Traceability - every decision lands in the ledger (when the repo has one)
+
+Undocumented decisions rot a workflow. **If the current repo has a decision ledger** (e.g. `docs/agentic-engineering/DECISIONS.md` or another append-only decision log), every human decision made through a Lavish gate MUST be appended to it.
+
+- One row per decision: `# · date · decision · rationale · evidence(commit/file) · source(Lavish page)`.
+- **Append-only**: never rewrite a past row. If a decision is changed/overturned, add a new row that `refines`/`supersedes` the old one; keep the old row.
+- Record even "small" decisions (tool location, naming, sequencing).
+- Do it in the same commit as (or immediately after) applying the decision, and reference the commit hash so it's traceable on the PR.
+- If the repo has **no** ledger, do not fabricate one; keep decisions in the PR/plan and only start a ledger if the user asks.
+
+## MUST: keep polling while Lavish is open
+
+A session is live if `lavish-axi` opened the page during this turn, or the last poll returned `opened`, `feedback`, or `browser_disconnected`, and it has **not** returned `session_ended`.
+
+Until `session_ended`, **every turn must end with a poll still running**. Comments and Queue / Send submissions from the page are available only through polling:
+
+1. Immediately after opening the page or using `--agent-reply`, run `lavish-axi poll <file>` without `--timeout-ms`.
+2. If the harness backgrounds the poll, use AwaitShell or an equivalent wait to **block** until it returns. Handle the result, then **poll again immediately**.
+3. `browser_disconnected` **does not mean the session ended**. Immediately poll the same file again. Do not stop to ask in chat whether to reopen it. Use `--reopen` or stop only when polling confirms that the session no longer exists, or the user explicitly requests it.
+4. If the user says in chat that Lavish feedback was missed, this rule has already been violated. Restore polling before replying.
+
+Never open Lavish and end the turn without a poll running, treat a harness timeout or backgrounded poll as permission to stop, or replace draining the feedback queue with a chat recap.
+
+## Anti-patterns
+
+```
+❌ Paste a 200-line plan in chat and ask "OK?"
+❌ Edit durable docs / ADRs / plans because chat sounded positive
+❌ Leave the Lavish page stale after the user commented
+❌ Make a decision on a Lavish gate and NOT log it when the repo has a ledger
+❌ Send an --agent-reply then end the turn without awaiting the poll
+❌ Stop after browser_disconnected and wait for the user to remind you in chat
+❌ End a turn while Lavish is still live and wait for the user to follow up
+✅ Open a Lavish page, keep polling until session_ended, then apply + log the decision
+```
