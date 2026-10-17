@@ -30,19 +30,19 @@ echo "==> Step 3: personalize the configured username"
 # Do this before any sudo call: sudo resets $USER to root, so whoami has to
 # run as the real interactive user first.
 REAL_USER="$(whoami)"
-FLAKE_USER="$(sed -nE 's/^[[:space:]]*user = "([^"]+)";.*/\1/p' "$DIR/flake.nix" | head -n1)"
+FLAKE_USER="$(sed -nE 's/^[[:space:]]*macUser = "([^"]+)";.*/\1/p' "$DIR/flake.nix" | head -n1)"
 if [ -z "$FLAKE_USER" ]; then
-  echo "    Could not find the single \"user = \" line in flake.nix."
+  echo "    Could not find the single \"macUser = \" line in flake.nix."
   echo "    Edit flake.nix yourself before continuing."
   exit 1
 elif [ "$FLAKE_USER" != "$REAL_USER" ]; then
   echo "    flake.nix is configured for user \"$FLAKE_USER\", but you are \"$REAL_USER\"."
-  read -r -p "    Rewrite flake.nix's \"user = \" line to \"$REAL_USER\"? [y/N] " REPLY
+  read -r -p "    Rewrite flake.nix's \"macUser = \" line to \"$REAL_USER\"? [y/N] " REPLY
   if [ "$REPLY" = "y" ] || [ "$REPLY" = "Y" ]; then
-    sed -i '' -E "s/^([[:space:]]*user = \")[^\"]+(\";.*)/\1${REAL_USER}\2/" "$DIR/flake.nix"
+    sed -i '' -E "s/^([[:space:]]*macUser = \")[^\"]+(\";.*)/\1${REAL_USER}\2/" "$DIR/flake.nix"
     echo "    Updated. Review the change with: git diff flake.nix"
   else
-    echo "    Skipped. Edit the single \"user = \" line in flake.nix yourself before continuing."
+    echo "    Skipped. Edit the single \"macUser = \" line in flake.nix yourself before continuing."
     exit 1
   fi
 else

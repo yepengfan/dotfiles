@@ -1,4 +1,4 @@
-{ config, pkgs, user, ... }:
+{ config, pkgs, macUser, ... }:
 
 let
   # Canonical repository for the permanent Nix environment.
@@ -11,8 +11,8 @@ let
 in
 
 {
-  home.username = user;
-  home.homeDirectory = "/Users/${user}";
+  home.username = macUser;
+  home.homeDirectory = "/Users/${macUser}";
   home.stateVersion = "24.11";
   home.packages = with pkgs; [
     # cli i use constantly

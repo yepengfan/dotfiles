@@ -1,4 +1,4 @@
-{ pkgs, user, ... }:
+{ pkgs, macUser, githubUser, ... }:
 
 {
   # Determinate already manages the Nix daemon, so nix-darwin shouldn't.
@@ -7,9 +7,9 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.hostPlatform = "aarch64-darwin"; # use x86_64-darwin for Intel CPU
 
-  system.primaryUser = user;
-  users.users.${user} = {
-    home = "/Users/${user}";
+  system.primaryUser = macUser;
+  users.users.${macUser} = {
+    home = "/Users/${macUser}";
   };
   system.stateVersion = 6;
   system.defaults = {
@@ -27,10 +27,10 @@
   };
   nix-homebrew = {
     enable = true;
-    inherit user;
+    user = macUser;
     autoMigrate = true;
     # Keep the maintained Reasonix cask in the same revision as this config.
-    taps."yepengfan/homebrew-dotfiles" = pkgs.runCommandLocal "dotfiles-homebrew-tap" {} ''
+    taps."${githubUser}/homebrew-dotfiles" = pkgs.runCommandLocal "dotfiles-homebrew-tap" {} ''
       mkdir -p "$out"
       cp -R ${./homebrew}/. "$out/"
     '';
@@ -47,7 +47,7 @@
       "azure/functions"
       "databricks/tap"
       "wxtsky/tap"
-      "yepengfan/dotfiles"
+      "${githubUser}/dotfiles"
     ];
     brews = [
       "aws-vault"
@@ -110,7 +110,7 @@
       "claude-code"
       "codex"
       "codexbar"
-      "yepengfan/dotfiles/reasonix"
+      "${githubUser}/dotfiles/reasonix"
       "font-jetbrains-mono-nerd-font"
       "font-symbols-only-nerd-font"
       "jordanbaird-ice"
