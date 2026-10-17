@@ -31,18 +31,18 @@ Undocumented decisions rot a workflow. **If the current repo has a decision ledg
 - Do it in the same commit as (or immediately after) applying the decision, and reference the commit hash so it's traceable on the PR.
 - If the repo has **no** ledger, do not fabricate one; keep decisions in the PR/plan and only start a ledger if the user asks.
 
-## MUST: Lavish 开着就持续 poll（不得等人在 chat 里提醒）
+## MUST: keep polling while Lavish is open
 
-Live session = 本回合已 `lavish-axi` 打开页面，或上次 poll 返回 `opened` / `feedback` / `browser_disconnected`，且**不是** `session_ended`。
+A session is live if `lavish-axi` opened the page during this turn, or the last poll returned `opened`, `feedback`, or `browser_disconnected`, and it has **not** returned `session_ended`.
 
-直到 `session_ended` 之前，**每一回合的收尾动作必须是 poll 在跑**，用户在页面上的 comments / Queue / Send 只能从 poll 拿到：
+Until `session_ended`, **every turn must end with a poll still running**. Comments and Queue / Send submissions from the page are available only through polling:
 
-1. 打开或 `--agent-reply` 之后立刻 `lavish-axi poll <file>`（不要 `--timeout-ms`）。
-2. 若 harness 把 poll 转后台：用 AwaitShell / 等价 wait **挡住**，直到它返回；处理完结果后**马上再 poll**。
-3. `browser_disconnected` **不是结束**。同一文件立刻再 `poll`。不要停在 chat 问「要不要重开」。只有 poll 表明 session 已不存在、或用户明确要求时才 `--reopen` / 结束。
-4. 用户若在 chat 里提醒「你没收到 Lavish 反馈」= 本规则已破：第一件事是恢复 poll，再说话。
+1. Immediately after opening the page or using `--agent-reply`, run `lavish-axi poll <file>` without `--timeout-ms`.
+2. If the harness backgrounds the poll, use AwaitShell or an equivalent wait to **block** until it returns. Handle the result, then **poll again immediately**.
+3. `browser_disconnected` **does not mean the session ended**. Immediately poll the same file again. Do not stop to ask in chat whether to reopen it. Use `--reopen` or stop only when polling confirms that the session no longer exists, or the user explicitly requests it.
+4. If the user says in chat that Lavish feedback was missed, this rule has already been violated. Restore polling before replying.
 
-禁止：打开 Lavish 后结束回合且没有 poll 在飞；把 harness 超时/后台当成可以停；用 chat recap 代替排空 poll 队列。
+Never open Lavish and end the turn without a poll running, treat a harness timeout or backgrounded poll as permission to stop, or replace draining the feedback queue with a chat recap.
 
 ## Anti-patterns
 
@@ -52,7 +52,7 @@ Live session = 本回合已 `lavish-axi` 打开页面，或上次 poll 返回 `o
 ❌ Leave the Lavish page stale after the user commented
 ❌ Make a decision on a Lavish gate and NOT log it when the repo has a ledger
 ❌ Send an --agent-reply then end the turn without awaiting the poll
-❌ browser_disconnected 后停在 chat 等人催
-❌ Lavish 仍 live 时结束回合、等用户 poke
+❌ Stop after browser_disconnected and wait for the user to remind you in chat
+❌ End a turn while Lavish is still live and wait for the user to follow up
 ✅ Open a Lavish page, keep polling until session_ended, then apply + log the decision
 ```
