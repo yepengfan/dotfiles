@@ -93,6 +93,7 @@ in
       "jordanbaird-ice"
       "maccy"
       "macfuse"
+      "moom"
       "opensuperwhisper"
       "session-manager-plugin"
       "wezterm"
