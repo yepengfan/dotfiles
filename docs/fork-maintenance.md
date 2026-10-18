@@ -12,7 +12,7 @@ personal settings. Both remain in the same repository and lockfile.
 | Homebrew inventory, upgrade policy, maintained Reasonix tap | `hosts/tedfan/darwin.nix` |
 | Git/delta, aliases, agent links, optional-resource overrides | `hosts/tedfan/home.nix` |
 | Login and interactive shell, Claude settings, agent instructions, Herdr preferences | `hosts/tedfan/files/` |
-| Chinese font fallback layered over upstream WezTerm defaults | `hosts/tedfan/files/.config/wezterm/wezterm.lua` |
+| Chinese font fallback and native WezTerm window title bar | `hosts/tedfan/files/.config/wezterm/wezterm.lua` |
 | Reasonix version, architecture-specific checksums and install hook | `hosts/tedfan/homebrew/Casks/reasonix.rb` |
 | Shared system and Home Manager defaults | `configuration.nix`, `home.nix`, `home/` |
 | Host selection and module composition | `flake.nix` |
@@ -29,7 +29,8 @@ base, so an upstream removal cannot silently remove a required local tool when
 packages to the host inventory explicitly. Other shared defaults, including
 Neovim and WezTerm behavior, continue to receive upstream changes.
 
-WezTerm loads the shared Lua configuration and adds the host's font fallback.
+WezTerm loads the shared Lua configuration, adds the host's font fallback,
+and restores the native title bar with macOS window controls.
 The host keeps its own Claude settings, agent policy and Herdr preferences.
 Upstream's Pi resources remain in the repository but are disabled for this host;
 the upstream permission-shortcut aliases `cc` and `co` are removed at shell
