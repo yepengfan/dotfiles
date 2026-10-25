@@ -14,6 +14,7 @@ personal settings. Both remain in the same repository and lockfile.
 | Login and interactive shell, Claude settings, agent instructions, Herdr preferences | `hosts/tedfan/files/` |
 | WezTerm font fallback, native title bar, and opaque windows | `hosts/tedfan/files/.config/wezterm/wezterm.lua` |
 | Reasonix version, architecture-specific checksums and install hook | `hosts/tedfan/homebrew/Casks/reasonix.rb` |
+| Ice 2 version and checksum (avoids invalid unrelated casks in the upstream tap) | `hosts/tedfan/homebrew/Casks/ice-2.rb` |
 | Shared system and Home Manager defaults | `configuration.nix`, `home.nix`, `home/` |
 | Host selection and module composition | `flake.nix` |
 

@@ -19,7 +19,6 @@ in
     onActivation.autoUpdate = lib.mkForce false;
     onActivation.upgrade = lib.mkForce false;
     taps = [
-      "teddychan/tap"
       "azure/functions"
       "databricks/tap"
       "wxtsky/tap"
@@ -91,7 +90,7 @@ in
       "${githubUser}/dotfiles/reasonix"
       "font-jetbrains-mono-nerd-font"
       "font-symbols-only-nerd-font"
-      "teddychan/tap/ice-2"
+      "${githubUser}/dotfiles/ice-2"
       "maccy"
       "macfuse"
       "moom"
