@@ -44,6 +44,12 @@ Secrets remain optional local inputs at `~/.zsh/secrets.zsh` and
 and downloaded runtimes stay outside the repository. Only Herdr's preferences
 file is linked. Do not commit credentials or generated application state.
 
+The host declares Automic Vault and its `gh-cli` formula, which supplies `gh`
+and conflicts with the upstream `gh` formula. Bootstrap opens Vault for its
+attended CLI installation, runs `av harden gh`, and verifies with `av doctor gh`.
+Administrator approval and GitHub credential setup remain interactive on a new
+Mac; credentials are not restored from this public repository.
+
 ## Configure remotes once
 
 ```sh

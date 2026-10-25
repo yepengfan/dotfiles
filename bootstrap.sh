@@ -67,4 +67,17 @@ sudo "$NIX_BIN" --extra-experimental-features 'nix-command flakes' run github:ni
 # If this still fails with "nix: command not found", open a new terminal
 # (Determinate adds nix to new shells' PATH) and re-run ./bootstrap.sh.
 
+echo "==> Step 5: Automic Vault GitHub CLI setup"
+open -a "Automic Vault"
+if [[ ! -x /usr/local/bin/av ]]; then
+  echo "    Complete Automic Vault's CLI installation in the app (administrator authentication required)."
+  read -r -p "    Press Enter when the CLI installation is complete. "
+fi
+if [[ ! -x /usr/local/bin/av ]]; then
+  echo "    Automic Vault CLI is missing. Complete its installation, then re-run ./bootstrap.sh." >&2
+  exit 1
+fi
+/usr/local/bin/av harden gh
+/usr/local/bin/av doctor gh
+
 echo "==> Done. Use ./rebuild.sh for future changes."

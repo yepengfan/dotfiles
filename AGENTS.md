@@ -3,6 +3,7 @@
 Deliberate decisions in this repo - do NOT silently revert them:
 
 - Changes to `main` must go through a PR. The user reviews and manually merges; agents must never merge PRs or bypass the ruleset.
+- This repo must restore the host on a fresh Mac through `bootstrap.sh`; declare required packages and setup steps rather than relying on existing machine state.
 
 - Keep personal settings under `hosts/tedfan/`; shared `configuration.nix`, `home.nix` and `home/` follow upstream. See `docs/fork-maintenance.md` for the sync workflow.
 
