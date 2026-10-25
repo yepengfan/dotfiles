@@ -43,6 +43,8 @@ in
       "fd"
       { name = "ffmpeg-full"; link = true; }
       "fzf"
+      # Provides gh; Vault's hardener replaces upstream gh with this formula.
+      # The two formulae conflict, so declare the final managed package only.
       "automic-vault/isotopes/gh-cli"
       "git"
       "git-delta"
@@ -85,6 +87,7 @@ in
       "zoxide"
     ];
     casks = lib.mkForce [
+      "automic-vault/isotopes/automic-vault"
       "claude-code"
       "codex"
       "codexbar"
