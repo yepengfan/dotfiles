@@ -2,6 +2,8 @@
 
 Deliberate decisions in this repo - do NOT silently revert them:
 
+- Changes to `main` must go through a PR. The user reviews and manually merges; agents must never merge PRs or bypass the ruleset.
+
 - Keep personal settings under `hosts/tedfan/`; shared `configuration.nix`, `home.nix` and `home/` follow upstream. See `docs/fork-maintenance.md` for the sync workflow.
 
 - `homebrew.onActivation.cleanup = "zap"` in `configuration.nix` is intentional. It forces the good habit of declaring every Homebrew package in the Nix config instead of installing things ad-hoc, which keeps the machine reproducible. Do not soften it to `uninstall` or `none`. Users are warned about its effect in README.md; this note is for anyone tempted to change the setting itself.
