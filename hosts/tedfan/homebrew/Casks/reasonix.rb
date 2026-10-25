@@ -10,6 +10,8 @@ cask "reasonix" do
   desc "Cache-first DeepSeek coding agent for the terminal"
   homepage "https://github.com/esengine/DeepSeek-Reasonix"
 
+  depends_on :macos
+
   binary "reasonix"
 
   postflight do

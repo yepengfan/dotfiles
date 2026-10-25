@@ -90,7 +90,7 @@ in
       "${githubUser}/dotfiles/reasonix"
       "font-jetbrains-mono-nerd-font"
       "font-symbols-only-nerd-font"
-      "jordanbaird-ice"
+      "${githubUser}/dotfiles/ice-2"
       "maccy"
       "macfuse"
       "moom"
