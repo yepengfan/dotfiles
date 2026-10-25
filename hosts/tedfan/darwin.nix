@@ -19,6 +19,7 @@ in
     onActivation.autoUpdate = lib.mkForce false;
     onActivation.upgrade = lib.mkForce false;
     taps = [
+      "automic-vault/isotopes"
       "azure/functions"
       "databricks/tap"
       "wxtsky/tap"
@@ -42,7 +43,7 @@ in
       "fd"
       { name = "ffmpeg-full"; link = true; }
       "fzf"
-      "gh"
+      "automic-vault/isotopes/gh-cli"
       "git"
       "git-delta"
       "git-filter-repo"
