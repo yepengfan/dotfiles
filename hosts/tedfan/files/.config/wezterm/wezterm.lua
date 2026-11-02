@@ -27,4 +27,12 @@ config.font = wezterm.font_with_fallback({
   "PingFang SC",
 })
 
+-- Map the Mac Delete key to the terminal's Ctrl+U line-editing shortcut.
+config.keys = config.keys or {}
+table.insert(config.keys, {
+  key = "Backspace",
+  mods = "CMD",
+  action = wezterm.action.SendKey({ key = "u", mods = "CTRL" }),
+})
+
 return config
