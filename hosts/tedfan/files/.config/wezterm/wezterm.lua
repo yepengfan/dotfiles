@@ -35,4 +35,16 @@ table.insert(config.keys, {
   action = wezterm.action.SendKey({ key = "u", mods = "CTRL" }),
 })
 
+-- Restore macOS line navigation in terminal command-line editors.
+table.insert(config.keys, {
+  key = "LeftArrow",
+  mods = "CMD",
+  action = wezterm.action.SendKey({ key = "a", mods = "CTRL" }),
+})
+table.insert(config.keys, {
+  key = "RightArrow",
+  mods = "CMD",
+  action = wezterm.action.SendKey({ key = "e", mods = "CTRL" }),
+})
+
 return config
