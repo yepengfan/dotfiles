@@ -92,6 +92,7 @@ in
       "codex"
       "codexbar"
       "dbeaver-community"
+      "discord"
       "font-jetbrains-mono-nerd-font"
       "font-symbols-only-nerd-font"
       "google-drive"
