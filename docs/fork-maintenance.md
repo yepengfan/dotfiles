@@ -29,6 +29,12 @@ base, so an upstream removal cannot silently remove a required local tool when
 packages to the host inventory explicitly. Other shared defaults, including
 Neovim and WezTerm behavior, continue to receive upstream changes.
 
+Homebrew itself is pinned by the `nix-homebrew` input in `flake.lock`;
+`brew update` refreshes package definitions but cannot upgrade that runtime.
+If newer casks require unsupported Homebrew DSL methods, update only this input
+with `nix flake lock --update-input nix-homebrew`, build and review the change
+through a PR, then apply with `./rebuild.sh` after merging.
+
 WezTerm loads the shared Lua configuration, adds the host's font fallback,
 and restores the native title bar with macOS window controls. This host uses
 opaque windows and disables the shared focus dimming; reloads clear stale
