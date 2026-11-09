@@ -102,6 +102,7 @@ in
       "obsidian"
       "opensuperwhisper"
       "session-manager-plugin"
+      "thebrowsercompany-dia"
       "typora"
       "wezterm"
       "wxtsky/tap/codeisland"
