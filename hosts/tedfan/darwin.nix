@@ -91,7 +91,6 @@ in
       "claude-code"
       "codex"
       "codexbar"
-      "${githubUser}/dotfiles/reasonix"
       "font-jetbrains-mono-nerd-font"
       "font-symbols-only-nerd-font"
       "${githubUser}/dotfiles/ice-2"
