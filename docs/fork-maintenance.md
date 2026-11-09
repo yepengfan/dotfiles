@@ -9,11 +9,10 @@ personal settings. Both remain in the same repository and lockfile.
 | Configuration | Source |
 | --- | --- |
 | Local macOS account, GitHub namespace, Git author | `hosts/tedfan/identity.nix` |
-| Homebrew inventory, upgrade policy, maintained Reasonix tap | `hosts/tedfan/darwin.nix` |
+| Homebrew inventory, upgrade policy, maintained local tap | `hosts/tedfan/darwin.nix` |
 | Git/delta, aliases, agent links, optional-resource overrides | `hosts/tedfan/home.nix` |
 | Login and interactive shell, Claude settings, agent instructions, Herdr preferences | `hosts/tedfan/files/` |
 | WezTerm font fallback, native title bar, and opaque windows | `hosts/tedfan/files/.config/wezterm/wezterm.lua` |
-| Reasonix version, architecture-specific checksums and install hook | `hosts/tedfan/homebrew/Casks/reasonix.rb` |
 | Ice 2 version and checksum (avoids invalid unrelated casks in the upstream tap) | `hosts/tedfan/homebrew/Casks/ice-2.rb` |
 | Shared system and Home Manager defaults | `configuration.nix`, `home.nix`, `home/` |
 | Host selection and module composition | `flake.nix` |
