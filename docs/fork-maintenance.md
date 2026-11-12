@@ -35,6 +35,15 @@ If newer casks require unsupported Homebrew DSL methods, update only this input
 with `nix flake lock --update-input nix-homebrew`, build and review the change
 through a PR, then apply with `./rebuild.sh` after merging.
 
+The host declares `nvm` in Homebrew and lazy-loads its scripts from
+`$HOMEBREW_PREFIX/opt/nvm`. Node versions, aliases and global npm packages stay
+in `~/.nvm`, outside the Homebrew Cellar, so nvm upgrades preserve them.
+On a fresh Mac, run `nvm install --lts` after bootstrap to install Node.
+When migrating a manual nvm installation, back up `~/.nvm/nvm.sh` and
+`~/.nvm/nvm-exec` outside those paths before opening a new shell and running
+`nvm --version`. Homebrew's loader creates links to its managed scripts for
+`nvm exec` and tools that source `~/.nvm/nvm.sh` directly.
+
 WezTerm loads the shared Lua configuration, adds the host's font fallback,
 and restores the native title bar with macOS window controls. This host uses
 opaque windows and disables the shared focus dimming; reloads clear stale

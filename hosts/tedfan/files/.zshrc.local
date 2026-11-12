@@ -30,9 +30,15 @@ export LANG=en_US.UTF-8
 # --- NVM (lazy-loaded for faster startup) ---
 export NVM_DIR="$HOME/.nvm"
 nvm() {
+  local nvm_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/nvm"
+  if [[ ! -s "$nvm_prefix/nvm.sh" ]]; then
+    print -u2 'nvm is missing from Homebrew; apply the dotfiles configuration first.'
+    return 127
+  fi
+  mkdir -p "$NVM_DIR" || return
   unfunction nvm node npm npx 2>/dev/null
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  \. "$nvm_prefix/nvm.sh"
+  [ -s "$nvm_prefix/etc/bash_completion.d/nvm" ] && \. "$nvm_prefix/etc/bash_completion.d/nvm"
   nvm "$@"
 }
 node() { nvm --version >/dev/null 2>&1; unfunction node 2>/dev/null; command node "$@"; }

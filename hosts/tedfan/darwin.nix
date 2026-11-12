@@ -63,6 +63,7 @@ in
       "mysql-client"
       "neovim"
       "nss"
+      "nvm"
       { name = "openssl@3"; link = true; }
       "p7zip"
       "php@8.1"
