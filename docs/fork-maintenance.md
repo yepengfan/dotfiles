@@ -29,11 +29,31 @@ base, so an upstream removal cannot silently remove a required local tool when
 packages to the host inventory explicitly. Other shared defaults, including
 Neovim and WezTerm behavior, continue to receive upstream changes.
 
+Homebrew owns all user software, shell plugins and fonts on this host.
+The host Home Manager module replaces `home.packages` with environment metadata
+only, and generates zsh initialization without Nix program paths. Upstream
+aliases and Starship settings still merge; the prompt and shell plugins are
+loaded from Homebrew by `.zshrc.local`. Git and LFS remain configured by Home
+Manager with their package installation disabled, and delta is resolved on PATH.
+The host disables nix-darwin's interactive shell packages, retains system
+environment initialization in `/etc/zshenv`, and selects Homebrew zsh as the
+login shell after Homebrew activation. Nix's configuration and activation
+dependencies remain in the store as infrastructure.
+
 Homebrew itself is pinned by the `nix-homebrew` input in `flake.lock`;
 `brew update` refreshes package definitions but cannot upgrade that runtime.
 If newer casks require unsupported Homebrew DSL methods, update only this input
 with `nix flake lock --update-input nix-homebrew`, build and review the change
 through a PR, then apply with `./rebuild.sh` after merging.
+
+The host declares `nvm` in Homebrew and lazy-loads its scripts from
+`$HOMEBREW_PREFIX/opt/nvm`. Node versions, aliases and global npm packages stay
+in `~/.nvm`, outside the Homebrew Cellar, so nvm upgrades preserve them.
+On a fresh Mac, run `nvm install --lts` after bootstrap to install Node.
+When migrating a manual nvm installation, back up `~/.nvm/nvm.sh` and
+`~/.nvm/nvm-exec` outside those paths before opening a new shell and running
+`nvm --version`. Homebrew's loader creates links to its managed scripts for
+`nvm exec` and tools that source `~/.nvm/nvm.sh` directly.
 
 WezTerm loads the shared Lua configuration, adds the host's font fallback,
 and restores the native title bar with macOS window controls. This host uses

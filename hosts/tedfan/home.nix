@@ -9,16 +9,24 @@ let
   };
 in
 {
+  # Homebrew owns software; retain only Home Manager's environment metadata.
+  home.packages = lib.mkForce [ config.home.sessionVariablesPackage ];
+  fonts.fontconfig.enable = lib.mkForce false;
+  programs.man.enable = false;
+
   programs.zsh = {
-    initContent = lib.mkMerge [
-      (lib.mkOrder 1050 ''
-        [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
-      '')
-      # Keep upstream aliases available, except these permission shortcuts.
-      (lib.mkOrder 1200 ''
-        unalias cc co 2>/dev/null || true
-      '')
-    ];
+    # Generate configuration without Nix package paths or plugin loaders.
+    autosuggestion.enable = lib.mkForce false;
+    syntaxHighlighting.enable = lib.mkForce false;
+    initContent = lib.mkForce ''
+      typeset -U path cdpath fpath manpath
+      [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList
+        (name: value: "alias -- ${lib.escapeShellArg name}=${lib.escapeShellArg value}")
+        (builtins.removeAttrs config.programs.zsh.shellAliases [ "cc" "co" ]))}
+      unalias cc co 2>/dev/null || true
+    '';
     shellAliases = {
       cat = "bat";
       ls = "eza";
@@ -34,24 +42,34 @@ in
 
   programs.git = {
     enable = true;
-    lfs.enable = true;
+    package = null;
+    signing.signer = "gpg";
+    lfs = {
+      enable = true;
+      package = null;
+    };
     settings = {
       user = identity.git;
       init.defaultBranch = "main";
       merge.conflictstyle = "diff3";
       diff.colorMoved = "default";
       credential.helper = "osxkeychain";
+      pager = {
+        diff = "delta";
+        log = "delta";
+        show = "delta";
+        blame = "delta";
+      };
+      interactive.diffFilter = "delta --color-only";
+      delta = {
+        navigate = true;
+        side-by-side = true;
+        line-numbers = true;
+      };
     };
   };
-  programs.delta = {
-    enable = true;
-    enableGitIntegration = true;
-    options = {
-      navigate = true;
-      side-by-side = true;
-      line-numbers = true;
-    };
-  };
+  # Keep upstream prompt settings; initialize the Homebrew binary in .zshrc.local.
+  programs.starship.enableZshIntegration = false;
 
   home.file = {
     ".zshrc.local" = link "files/.zshrc.local";

@@ -6,6 +6,7 @@ Deliberate decisions in this repo - do NOT silently revert them:
 - This repo must restore the host on a fresh Mac through `bootstrap.sh`; declare required packages and setup steps rather than relying on existing machine state.
 
 - Keep personal settings under `hosts/tedfan/`; shared `configuration.nix`, `home.nix` and `home/` follow upstream. See `docs/fork-maintenance.md` for the sync workflow.
+- This host installs user software, shell plugins and fonts through Homebrew. Nix manages configuration and its own infrastructure; preserve the configuration-only Home Manager overrides in `hosts/tedfan/home.nix`.
 
 - `homebrew.onActivation.cleanup = "zap"` in `configuration.nix` is intentional. It forces the good habit of declaring every Homebrew package in the Nix config instead of installing things ad-hoc, which keeps the machine reproducible. Do not soften it to `uninstall` or `none`. Users are warned about its effect in README.md; this note is for anyone tempted to change the setting itself.
 - Never commit `.no-mistakes/` validation evidence to this public repo. `.no-mistakes/` is gitignored; if a validation pipeline stages evidence into a branch, drop it before merging.

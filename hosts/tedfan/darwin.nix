@@ -1,10 +1,34 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-  inherit (import ./identity.nix) githubUser;
+  inherit (import ./identity.nix) githubUser macUser;
 in
 {
   home-manager.backupFileExtension = "hm-bak";
+
+  # Homebrew supplies interactive shells; Nix still generates system settings.
+  programs.zsh.enable = false;
+  programs.bash.enable = false;
+  documentation.info.enable = false;
+  environment.shells = [ "/opt/homebrew/bin/zsh" ];
+  environment.etc."zshenv".text = ''
+    if [[ -o rcs ]]; then
+      if [[ -z "''${__NIX_DARWIN_SET_ENVIRONMENT_DONE-}" ]]; then
+        . ${config.system.build.setEnvironment}
+      fi
+      [[ -r /etc/zshenv.local ]] && source /etc/zshenv.local
+    fi
+  '';
+  # Run after Homebrew installation, including on the first bootstrap.
+  system.activationScripts.postActivation.text = lib.mkAfter ''
+    if [[ ! -x /opt/homebrew/bin/zsh ]]; then
+      echo "Homebrew zsh is missing; cannot set the login shell." >&2
+      exit 1
+    fi
+    if [[ "$(dscl . -read /Users/${macUser} UserShell)" != "UserShell: /opt/homebrew/bin/zsh" ]]; then
+      dscl . -create /Users/${macUser} UserShell /opt/homebrew/bin/zsh
+    fi
+  '';
 
   nix-homebrew = {
     autoMigrate = true;
@@ -32,6 +56,7 @@ in
       "awscli"
       "azure-cli"
       "azure/functions/azure-functions-core-tools@4"
+      "bash"
       "bat"
       "chafa"
       "colima"
@@ -50,7 +75,9 @@ in
       "git-delta"
       "git-filter-repo"
       "git-gui"
+      "git-lfs"
       "gitleaks"
+      "gnupg"
       "herdr"
       { name = "imagemagick-full"; link = true; }
       "jq"
@@ -63,6 +90,7 @@ in
       "mysql-client"
       "neovim"
       "nss"
+      "nvm"
       { name = "openssl@3"; link = true; }
       "p7zip"
       "php@8.1"
@@ -75,6 +103,7 @@ in
       "sevenzip"
       "starship"
       "stow"
+      { name = "texinfo"; link = true; }
       "tig"
       "tmux"
       "uv"
@@ -85,6 +114,9 @@ in
       "yq"
       "zellij"
       "zoxide"
+      "zsh"
+      "zsh-autosuggestions"
+      "zsh-syntax-highlighting"
     ];
     casks = lib.mkForce [
       "automic-vault/isotopes/automic-vault"
@@ -93,6 +125,7 @@ in
       "codexbar"
       "dbeaver-community"
       "discord"
+      "font-hack-nerd-font"
       "font-jetbrains-mono-nerd-font"
       "font-symbols-only-nerd-font"
       "google-drive"
