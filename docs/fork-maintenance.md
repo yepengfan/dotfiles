@@ -46,6 +46,14 @@ If newer casks require unsupported Homebrew DSL methods, update only this input
 with `nix flake lock --update-input nix-homebrew`, build and review the change
 through a PR, then apply with `./rebuild.sh` after merging.
 
+Azure Functions Core Tools v4 also causes Homebrew to load the unversioned
+formula while inspecting the installed package. The host declares trust for
+that additional definition through a tap-level item allowlist in
+`homebrew.extraConfig`, alongside the v4 formula's own trust declaration.
+Only v4 is installed. Keep this trust in the generated Brewfile: Homebrew Bundle
+cleanup replaces the trust store with the Brewfile's declarations, so a manual
+`brew trust` alone does not persist across rebuilds.
+
 The host declares `nvm` in Homebrew and lazy-loads its scripts from
 `$HOMEBREW_PREFIX/opt/nvm`. Node versions, aliases and global npm packages stay
 in `~/.nvm`, outside the Homebrew Cellar, so nvm upgrades preserve them.
