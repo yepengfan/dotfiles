@@ -92,6 +92,15 @@ Edit the config files in place, then apply:
 That's it.
 No separate build-and-copy step.
 
+On this host, Homebrew installs user software, fonts, zsh and its plugins.
+Nix and Home Manager manage macOS settings and configuration files, without
+installing duplicate user tools. Declare software in `hosts/tedfan/darwin.nix`;
+use `brew upgrade` to update it deliberately. Rebuilding does not upgrade
+existing Homebrew packages. Node versions remain managed by nvm.
+
+After applying the configuration, new login sessions use
+`/opt/homebrew/bin/zsh`. macOS's `/bin/zsh` remains available as a fallback.
+
 ## Make it yours
 
 This repo is mine.

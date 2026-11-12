@@ -21,6 +21,11 @@ SAVEHIST=10000
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
+
+# --- Completion (including Homebrew formula completions) ---
+fpath=("$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
+autoload -Uz compinit && compinit
 
 # --- Environment ---
 export EDITOR="nvim"
@@ -80,3 +85,15 @@ bindkey '\e[1;3D' backward-word
 alias nexus="$HOME/Developer/infomedia-nexus/nexus"
 alias claude-mem='bun "$HOME/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-cli.js" start'
 export TREEHOUSE_ROOT="$HOME/Developer/treehouse-pool"
+
+# --- Homebrew shell integrations ---
+if [[ "$TERM" != dumb ]] && command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+if [[ -r "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  bindkey '^f' autosuggest-accept
+fi
+# Load after all integrations have created their ZLE widgets.
+[[ -r "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && \
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
