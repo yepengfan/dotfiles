@@ -44,6 +44,20 @@ nvm() {
   unfunction nvm node npm npx 2>/dev/null
   \. "$nvm_prefix/nvm.sh"
   [ -s "$nvm_prefix/etc/bash_completion.d/nvm" ] && \. "$nvm_prefix/etc/bash_completion.d/nvm"
+  if [[ -x /usr/local/bin/npm ]]; then
+    # nvm changes PATH on every version switch; keep AV's npm launcher first.
+    functions[_dotfiles_nvm]="$functions[nvm]"
+    nvm() {
+      # Let nvm's nested calls finish before restoring the caller's PATH order.
+      local -i _dotfiles_nvm_depth=$(( ${_dotfiles_nvm_depth:-0} + 1 ))
+      _dotfiles_nvm "$@"
+      local nvm_status=$?
+      if (( _dotfiles_nvm_depth == 1 )); then
+        path=(/usr/local/bin "${(@)path:#/usr/local/bin}")
+      fi
+      return "$nvm_status"
+    }
+  fi
   nvm "$@"
 }
 node() { nvm --version >/dev/null 2>&1; unfunction node 2>/dev/null; command node "$@"; }
@@ -55,6 +69,7 @@ if [[ -n "$_nvm_default_alias" ]]; then
   [[ -n "$_nvm_default_dir" ]] && export PATH="${_nvm_default_dir}/bin:$PATH"
 fi
 unset _nvm_default_alias _nvm_default_dir
+[[ -x /usr/local/bin/npm ]] && path=(/usr/local/bin "${(@)path:#/usr/local/bin}")
 
 # --- Bun ---
 export BUN_INSTALL="$HOME/.bun"
