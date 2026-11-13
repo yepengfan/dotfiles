@@ -63,6 +63,15 @@ When migrating a manual nvm installation, back up `~/.nvm/nvm.sh` and
 `nvm --version`. Homebrew's loader creates links to its managed scripts for
 `nvm exec` and tools that source `~/.nvm/nvm.sh` directly.
 
+After selecting a Node version, `av harden node` configures AV's npm launcher;
+verify it with `av doctor node`. Home Manager provides an npm-only link directory
+at `~/.local/share/av-npm/bin`, pointing to `/usr/local/bin/npm`. When the launcher
+exists, the host prioritizes this directory at startup and after nvm commands.
+This preserves the AV entry point while `node` and `npx` continue to resolve
+from nvm's selected version, even when older copies exist in `/usr/local/bin`.
+The launcher remains bound to the npm target selected during AV hardening;
+check its target in AV when changing the protected npm version.
+
 WezTerm loads the shared Lua configuration, adds the host's font fallback,
 and restores the native title bar with macOS window controls. This host uses
 opaque windows and disables the shared focus dimming; reloads clear stale

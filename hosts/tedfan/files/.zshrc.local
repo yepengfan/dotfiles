@@ -34,6 +34,7 @@ export LANG=en_US.UTF-8
 
 # --- NVM (lazy-loaded for faster startup) ---
 export NVM_DIR="$HOME/.nvm"
+typeset -g _dotfiles_av_npm_bin="$HOME/.local/share/av-npm/bin"
 nvm() {
   local nvm_prefix="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/nvm"
   if [[ ! -s "$nvm_prefix/nvm.sh" ]]; then
@@ -44,6 +45,20 @@ nvm() {
   unfunction nvm node npm npx 2>/dev/null
   \. "$nvm_prefix/nvm.sh"
   [ -s "$nvm_prefix/etc/bash_completion.d/nvm" ] && \. "$nvm_prefix/etc/bash_completion.d/nvm"
+  if [[ -x "$_dotfiles_av_npm_bin/npm" ]]; then
+    # Prioritize only AV's npm link, leaving node and npx under nvm's control.
+    functions[_dotfiles_nvm]="$functions[nvm]"
+    nvm() {
+      # Let nvm's nested calls finish before restoring the caller's PATH order.
+      local -i _dotfiles_nvm_depth=$(( ${_dotfiles_nvm_depth:-0} + 1 ))
+      _dotfiles_nvm "$@"
+      local nvm_status=$?
+      if (( _dotfiles_nvm_depth == 1 )); then
+        path=("$_dotfiles_av_npm_bin" "${(@)path:#$_dotfiles_av_npm_bin}")
+      fi
+      return "$nvm_status"
+    }
+  fi
   nvm "$@"
 }
 node() { nvm --version >/dev/null 2>&1; unfunction node 2>/dev/null; command node "$@"; }
@@ -55,6 +70,8 @@ if [[ -n "$_nvm_default_alias" ]]; then
   [[ -n "$_nvm_default_dir" ]] && export PATH="${_nvm_default_dir}/bin:$PATH"
 fi
 unset _nvm_default_alias _nvm_default_dir
+[[ -x "$_dotfiles_av_npm_bin/npm" ]] && \
+  path=("$_dotfiles_av_npm_bin" "${(@)path:#$_dotfiles_av_npm_bin}")
 
 # --- Bun ---
 export BUN_INSTALL="$HOME/.bun"

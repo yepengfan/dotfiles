@@ -72,6 +72,11 @@ in
   programs.starship.enableZshIntegration = false;
 
   home.file = {
+    # Expose only the protected npm launcher ahead of nvm's selected version.
+    ".local/share/av-npm/bin/npm" = {
+      source = config.lib.file.mkOutOfStoreSymlink "/usr/local/bin/npm";
+      force = true;
+    };
     ".zshrc.local" = link "files/.zshrc.local";
     ".zprofile" = link "files/.zprofile";
     ".config/wezterm" = link "files/.config/wezterm";
