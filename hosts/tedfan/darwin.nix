@@ -44,11 +44,15 @@ in
     onActivation.upgrade = lib.mkForce false;
     taps = [
       "automic-vault/isotopes"
-      "azure/functions"
       "databricks/tap"
       "wxtsky/tap"
       "${githubUser}/dotfiles"
     ];
+    # Homebrew also loads the unversioned definition when inspecting Core Tools v4.
+    # Use the native DSL for item-specific tap trust, without installing that formula.
+    extraConfig = ''
+      tap "azure/functions", trusted: { formula: "azure-functions-core-tools" }
+    '';
     # This host owns its complete inventory, including tools also in the base.
     # Upstream package changes are adopted deliberately before zap cleanup.
     brews = lib.mkForce [
