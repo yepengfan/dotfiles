@@ -141,6 +141,7 @@ in
       "opensuperwhisper"
       "session-manager-plugin"
       "thebrowsercompany-dia"
+      "ticktick"
       "typora"
       "wezterm"
       "wxtsky/tap/codeisland"
