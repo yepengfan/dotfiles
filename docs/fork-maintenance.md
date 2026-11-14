@@ -64,8 +64,16 @@ When migrating a manual nvm installation, back up `~/.nvm/nvm.sh` and
 `nvm exec` and tools that source `~/.nvm/nvm.sh` directly.
 
 After selecting a Node version, `av harden node` configures AV's npm launcher;
-verify it with `av doctor node`. Home Manager provides an npm-only link directory
-at `~/.local/share/av-npm/bin`, pointing to `/usr/local/bin/npm`. When the launcher
+verify the protected launcher with `PATH="/usr/local/bin:$PATH" av doctor node`.
+AV Doctor currently recognizes direct paths and symlinks, but reports the
+forwarding script below as `stub_not_first_on_path` even though it executes
+the protected launcher. The scoped PATH above checks that launcher itself;
+it does not change the interactive shell's npm-only PATH ordering.
+Home Manager provides an npm-only launcher directory
+at `~/.local/share/av-npm/bin`, whose wrapper executes `/usr/local/bin/npm` by its
+canonical path. A direct symlink leaves the alternate script path in AV's
+arguments, classifies commands such as `npm ci` as Unknown, and causes Approval
+even with Write Access. When the protected launcher
 exists, the host prioritizes this directory at startup and after nvm commands.
 This preserves the AV entry point while `node` and `npx` continue to resolve
 from nvm's selected version, even when older copies exist in `/usr/local/bin`.

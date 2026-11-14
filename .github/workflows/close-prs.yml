@@ -13,7 +13,7 @@ jobs:
     if: >-
       github.event.pull_request.user.login != github.repository_owner &&
       !(github.repository == 'yepengfan/dotfiles' &&
-        github.event.pull_request.user.login == 'yepeng-ai-developer[bot]')
+        github.event.pull_request.user.id == 355973379)
     runs-on: ubuntu-latest
     steps:
       - name: Comment and close pull request

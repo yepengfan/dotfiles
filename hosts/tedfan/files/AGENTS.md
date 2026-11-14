@@ -2,7 +2,7 @@
 
 - Never use the em dash (U+2014). Use plain dash "-" instead
 - When writing commit messages, NEVER auto-add your agent name as co-author
-- All new AI commits must use `yepeng-ai-developer[bot]` as both Author and Committer; GitHub code writes and PR creation must authenticate as that GitHub App. The user reviews and merges PRs; agents must never merge them. Follow `/Users/tedfan/Developer/obsidian-mcp-server/obsidian-s3-mcp/docs/github-app-identity.md`, configure a token scoped to the target repository, and stop if App identity cannot be verified. Never fall back to personal credentials. Preserve human Git settings and existing history.
+- All new AI commits must use `yepengfan[bot]` as both Author and Committer; GitHub code writes and PR creation must authenticate as that GitHub App. The user reviews and merges PRs; agents must never merge them. Follow `/Users/tedfan/Developer/obsidian-mcp-server/obsidian-s3-mcp/docs/github-app-identity.md`, configure a token scoped to the target repository, and stop if App identity cannot be verified. Never fall back to personal credentials. Preserve human Git settings and existing history.
 - Do not request the GitHub App private key for local-only Git operations. Make local commits with the already-verified bot Author/Committer identity using process-local settings; reserve repository-scoped App sessions for authenticated GitHub operations, and batch related writes into one session.
 - Never manually modify CHANGELOG.md files or any files that are marked as auto-generated
 - When making technical decisions, do not give much weight to development cost.
