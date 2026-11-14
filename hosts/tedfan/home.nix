@@ -74,7 +74,13 @@ in
   home.file = {
     # Expose only the protected npm launcher ahead of nvm's selected version.
     ".local/share/av-npm/bin/npm" = {
-      source = config.lib.file.mkOutOfStoreSymlink "/usr/local/bin/npm";
+      # Invoke AV's canonical script path so its command classifier sees npm's
+      # arguments rather than the symlink path as the operation.
+      text = ''
+        #!/bin/sh
+        exec /usr/local/bin/npm "$@"
+      '';
+      executable = true;
       force = true;
     };
     ".zshrc.local" = link "files/.zshrc.local";
