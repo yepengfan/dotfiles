@@ -123,10 +123,12 @@ in
       "zsh-syntax-highlighting"
     ];
     casks = lib.mkForce [
+      "antigravity-cli"
       "automic-vault/isotopes/automic-vault"
       "claude-code"
       "codex"
       "codexbar"
+      "cursor-cli"
       "dbeaver-community"
       "discord"
       "font-hack-nerd-font"
