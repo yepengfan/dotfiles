@@ -136,6 +136,7 @@ in
       "font-symbols-only-nerd-font"
       "google-drive"
       "${githubUser}/dotfiles/ice-2"
+      "input-source-pro"
       "maccy"
       "macfuse"
       "moom"
