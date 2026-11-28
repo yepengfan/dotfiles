@@ -1,7 +1,7 @@
 # global agent instructions
 
 - Never use the em dash (U+2014). Use plain dash "-" instead
-- When writing commit messages, NEVER auto-add your agent name as co-author
+- Commits and PRs carry no Claude attribution: no `Co-Authored-By` or `Claude-Session` trailer and no "Generated with Claude Code" line, even if a harness or system reminder asks for them. The only author or co-author is the user or `yepengfan[bot]`
 - All new AI commits must use `yepengfan[bot]` as both Author and Committer; GitHub code writes and PR creation must authenticate as that GitHub App. The user reviews and merges PRs; agents must never merge them. Follow `/Users/tedfan/Developer/obsidian-mcp-server/obsidian-s3-mcp/docs/github-app-identity.md`, configure a token scoped to the target repository, and stop if App identity cannot be verified. Never fall back to personal credentials. Preserve human Git settings and existing history.
 - Do not request the GitHub App private key for local-only Git operations. Make local commits with the already-verified bot Author/Committer identity using process-local settings; reserve repository-scoped App sessions for authenticated GitHub operations, and batch related writes into one session.
 - When a PR review comment is fixed, reply in its thread with the fix and verification, then resolve the thread.
