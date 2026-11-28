@@ -15,6 +15,34 @@ else
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
+# Resolve the absolute path for the later sudo call, which resets PATH.
+NIX_BIN="$(command -v nix)"
+# App Store authentication is attended. Skip the prompt if all declared apps
+# are already installed, so a bootstrap retry can proceed without signing in.
+MAS_APP_IDS=$("$NIX_BIN" --extra-experimental-features 'nix-command flakes' eval --raw \
+  "$DIR#darwinConfigurations.mac.config.homebrew.masApps" \
+  --apply 'apps: builtins.concatStringsSep "\n" (builtins.map toString (builtins.attrValues apps))')
+missing_store_app=false
+while IFS= read -r app_id; do
+  if [[ -n "$app_id" && -z "$(mdfind "kMDItemAppStoreAdamID == $app_id && kMDItemAppStoreHasReceipt == 1")" ]]; then
+    missing_store_app=true
+    break
+  fi
+done <<< "$MAS_APP_IDS"
+if "$missing_store_app"; then
+  echo "==> Mac App Store sign-in is required to restore the declared apps"
+  if [[ ! -t 0 ]]; then
+    echo "    Sign in to the Mac App Store and rerun ./bootstrap.sh in an interactive terminal." >&2
+    exit 1
+  fi
+  open -a "App Store"
+  if ! read -r -p "    Have you signed in to the Mac App Store? [y/N] " app_store_ready ||
+     [[ "$app_store_ready" != [yY] ]]; then
+    echo "    Sign in to the Mac App Store, then rerun ./bootstrap.sh." >&2
+    exit 1
+  fi
+fi
+
 echo "==> Step 2: symlink this repo to ~/.dotfiles"
 # home.nix resolves its mkOutOfStoreSymlink paths through ~/.dotfiles, so this
 # has to exist before the first switch or the build will fail to find them.
@@ -56,12 +84,8 @@ echo "==> Step 4: first darwin-rebuild switch (pinned to nix-darwin-26.05)"
 # This fetches the darwin-rebuild tool from the nix-darwin-26.05 release branch,
 # not the exact flake.lock revision. The system config it applies is still pinned
 # by this repo's flake.lock.
-# sudo resets PATH to a secure default that excludes /nix/.../bin, so a
-# freshly installed `nix` would not be found under sudo even though it's
-# on PATH here. Resolve the absolute path first and invoke that instead.
-NIX_BIN="$(command -v nix)"
-# "mac" is the flake host label - if you renamed it, change it in flake.nix
-# and rebuild.sh too.
+# "mac" is the flake host label. Keep it in sync with the preflight above,
+# flake.nix, and rebuild.sh.
 sudo "$NIX_BIN" --extra-experimental-features 'nix-command flakes' run github:nix-darwin/nix-darwin/nix-darwin-26.05#darwin-rebuild -- \
   switch --flake ~/.dotfiles#mac
 # If this still fails with "nix: command not found", open a new terminal

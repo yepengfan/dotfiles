@@ -152,7 +152,7 @@ nix --extra-experimental-features 'nix-command flakes' build .#darwinConfigurati
 Preview the resulting Homebrew cleanup before applying a changed inventory:
 
 ```sh
-nix --extra-experimental-features 'nix-command flakes' eval --raw .#darwinConfigurations.mac.config.homebrew.brewfile | HOMEBREW_NO_AUTO_UPDATE=1 brew bundle cleanup --file=-
+nix --extra-experimental-features 'nix-command flakes' eval --raw .#darwinConfigurations.mac.config.homebrew.brewfile | HOMEBREW_NO_AUTO_UPDATE=1 brew bundle cleanup --no-mas --file=-
 ```
 
 Run affected application checks, then commit conflict resolutions if needed,

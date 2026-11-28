@@ -2,6 +2,8 @@
 
 let
   inherit (import ./identity.nix) githubUser macUser;
+  inherit (config.homebrew) prefix user;
+  brewfile = pkgs.writeText "Brewfile" config.homebrew.brewfile;
 in
 {
   home-manager.backupFileExtension = "hm-bak";
@@ -37,6 +39,20 @@ in
       cp -R ${./homebrew}/. "$out/"
     '';
   };
+
+  # Bundle's install --force-cleanup path ignores cleanup type filters.
+  # Run the explicit cleanup command so App Store apps are preserved.
+  system.activationScripts.homebrew.text = lib.mkIf config.homebrew.enable (lib.mkForce ''
+    echo >&2 "Homebrew bundle..."
+    if [ -f "${prefix}/bin/brew" ]; then
+      PATH="${prefix}/bin:${lib.makeBinPath [ pkgs.mas ]}:$PATH" \
+        sudo --preserve-env=PATH --user=${lib.escapeShellArg user} --set-home \
+        env HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_BUNDLE_NO_UPGRADE=1 \
+        brew bundle cleanup --install --force --zap --no-mas --file=${brewfile}
+    else
+      echo >&2 "Homebrew is not installed, skipping Homebrew Bundle."
+    fi
+  '');
 
   homebrew = {
     # Update tools deliberately, separately from applying machine settings.
@@ -89,6 +105,7 @@ in
       "lazygit"
       "libpq"
       "libtiff"
+      "mas"
       "minikube"
       "mkcert"
       "mysql-client"
@@ -153,5 +170,9 @@ in
       "zen"
       "zulu@17"
     ];
+    masApps = {
+      Amphetamine = 937984704;
+      Xnip = 1221250572;
+    };
   };
 }
