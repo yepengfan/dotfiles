@@ -98,6 +98,7 @@ in
       { name = "openssl@3"; link = true; }
       "p7zip"
       "php@8.1"
+      "pi-coding-agent"
       "pipx"
       "poppler"
       "pyenv"

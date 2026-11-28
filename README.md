@@ -152,14 +152,9 @@ You only run `./rebuild.sh` when you change something that isn't just a symlinke
 
 ## Optional Pi configuration
 
-The selected host disables these optional resources. This section documents the
-resources retained from upstream.
-
-Pi is an opt-in CLI, not a dependency this repository vendors. Install it from its owner with the [official Pi instructions](https://pi.dev), for example:
-
-```sh
-npm install -g --ignore-scripts @earendil-works/pi-coding-agent
-```
+The selected host installs the [Pi CLI](https://formulae.brew.sh/formula/pi-coding-agent)
+through Homebrew. The optional Home Manager resources described below are disabled
+for this host.
 
 [Pi Launcher](https://github.com/kunchenguid/homebrew-tap) is also optional and installed from its owner, not declared by this config:
 
