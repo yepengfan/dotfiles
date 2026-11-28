@@ -25,9 +25,22 @@ set -u
 
 TMP_ROOT=$(dotfiles_test_tmproot pi-calm)
 CALM_DIR="$ROOT/home/.pi/agent/extensions/calm"
-PI_PACKAGE_DIR=${PI_CALM_TEST_PACKAGE_DIR:-"$(npm root -g 2>/dev/null)/@earendil-works/pi-coding-agent"}
 TMUX_SOCKET="pi-calm-test-$$"
 TMUX_SESSION="pi-calm-e2e"
+
+find_pi_package() {
+  local npm_root brew_prefix package="@earendil-works/pi-coding-agent"
+  if [ -n "${PI_CALM_TEST_PACKAGE_DIR:-}" ]; then
+    printf '%s\n' "$PI_CALM_TEST_PACKAGE_DIR"
+  elif npm_root=$(npm root -g 2>/dev/null) && [ -f "$npm_root/$package/package.json" ]; then
+    printf '%s\n' "$npm_root/$package"
+  elif brew_prefix=$(brew --prefix pi-coding-agent 2>/dev/null) &&
+    [ -f "$brew_prefix/libexec/lib/node_modules/$package/package.json" ]; then
+    printf '%s\n' "$brew_prefix/libexec/lib/node_modules/$package"
+  fi
+}
+
+PI_PACKAGE_DIR=$(find_pi_package)
 
 cleanup() {
   if command -v tmux >/dev/null 2>&1; then
@@ -89,7 +102,7 @@ build_node_fixture() {
 }
 
 have_pi_package() {
-  [ -f "$PI_PACKAGE_DIR/package.json" ]
+  [ -n "$PI_PACKAGE_DIR" ] && [ -f "$PI_PACKAGE_DIR/package.json" ]
 }
 
 test_zero_coupling_and_state_file() {
@@ -181,9 +194,10 @@ test_static_typescript_and_repo_wiring() {
 JSON
     (cd "$fixture" && tsc -p tsconfig.json) \
       || fail "Pi Calm extension does not typecheck under strict TypeScript"
+    pass "Pi Calm extension typechecks under strict TypeScript"
   fi
 
-  pass "static wiring: Home Manager auto-load intact, TypeScript typechecks, existing JS extension parses"
+  pass "static wiring: Home Manager auto-load intact, existing JS extension parses"
 }
 
 test_preference_and_command() {
@@ -583,13 +597,16 @@ JS
 }
 
 test_real_pi_tui_smoke() {
-  local fixture agent project socket pane i
+  local fixture agent project socket pane i pi_version
   if ! command -v pi >/dev/null 2>&1 || ! command -v tmux >/dev/null 2>&1; then
     echo "skip: pi or tmux not found for isolated real TUI smoke"
     return 0
   fi
-  [ "$(pi --version 2>/dev/null || true)" = "0.82.0" ] \
-    || fail "real Pi smoke requires the installed Pi 0.82.0 proof target"
+  pi_version=$(pi --version) || fail "could not read the installed Pi version"
+  if [ "$pi_version" != "0.82.0" ]; then
+    echo "skip: real Pi TUI smoke requires Pi 0.82.0 on PATH (found $pi_version)"
+    return 0
+  fi
 
   fixture="$TMP_ROOT/tui-smoke"
   agent="$fixture/agent"
