@@ -93,7 +93,7 @@ export function installCalmBuiltInToolShellLayout(): void {
     return definition;
   };
 
-  ToolExecutionComponent.prototype.render = function (width: number): string[] {
+  ToolExecutionComponent.prototype.render = function (width: number) {
     const state = this as unknown as ToolRowPresentationState;
     const isKnownBuiltIn =
       CALM_BUILT_IN_TOOL_NAMES.has(state.toolName) &&
