@@ -28,7 +28,7 @@ If you find a bug, please open a GitHub Issue using the bug report template.
 Running the switch builds:
 
 - System settings (dark mode, key repeat, dock, Finder, trackpad)
-- Homebrew apps (casks and CLI tools)
+- Homebrew Bundle apps (casks, CLI tools, and Mac App Store apps)
 - Nix user packages (ripgrep, fd, fzf, jq, lazygit, Neovim, Hack Nerd Font)
 - Shell (zsh, aliases, starship prompt)
 - Editor (Neovim config with the rose-pine moon theme)
@@ -53,7 +53,8 @@ cd dotfiles
 
 Before you run it: review "Make it yours" below.
 Change the host label or CPU architecture if needed, and read the Homebrew cleanup warning.
-`bootstrap.sh` applies the config to your machine, so do this first.
+Sign in to the Mac App Store before running `bootstrap.sh` so Homebrew Bundle can
+install the apps declared in `homebrew.masApps`.
 
 ```sh
 ./bootstrap.sh
@@ -115,9 +116,11 @@ If you clone it, review these before you run `bootstrap.sh`:
 host declares the author name/email in `hosts/tedfan/identity.nix`.
 
 **Homebrew cleanup warning:** the shared `configuration.nix` enables
-`homebrew.onActivation.cleanup = "zap"`. This fork's active inventory is the
-`brews` and `casks` lists in [`hosts/tedfan/darwin.nix`](hosts/tedfan/darwin.nix).
-Those lists use `lib.mkForce` and replace the shared lists in `configuration.nix`.
+`homebrew.onActivation.cleanup = "zap"`. The host declares its Homebrew inventory
+in [`hosts/tedfan/darwin.nix`](hosts/tedfan/darwin.nix) using `brews`, `casks`, and
+`masApps`.
+The `brews` and `casks` lists use `lib.mkForce` and replace the shared lists in
+`configuration.nix`.
 
 Before running `bootstrap.sh` or `rebuild.sh`, add every formula and cask you
 want to keep to **`hosts/tedfan/darwin.nix`**. Adding it only to the shared

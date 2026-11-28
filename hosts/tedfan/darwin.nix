@@ -89,6 +89,7 @@ in
       "lazygit"
       "libpq"
       "libtiff"
+      "mas"
       "minikube"
       "mkcert"
       "mysql-client"
@@ -153,5 +154,9 @@ in
       "zen"
       "zulu@17"
     ];
+    masApps = {
+      Amphetamine = 937984704;
+      Xnip = 1221250572;
+    };
   };
 }
