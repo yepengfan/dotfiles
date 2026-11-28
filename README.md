@@ -54,7 +54,8 @@ cd dotfiles
 Before you run it: review "Make it yours" below.
 Change the host label or CPU architecture if needed, and read the Homebrew cleanup warning.
 Sign in to the Mac App Store before running `bootstrap.sh` so Homebrew Bundle can
-install the apps declared in `homebrew.masApps`.
+install the apps declared in `homebrew.masApps`. If any are missing, interactive
+bootstrap opens the App Store and asks you to confirm sign-in before activation.
 
 ```sh
 ./bootstrap.sh
@@ -121,6 +122,7 @@ in [`hosts/tedfan/darwin.nix`](hosts/tedfan/darwin.nix) using `brews`, `casks`, 
 `masApps`.
 The `brews` and `casks` lists use `lib.mkForce` and replace the shared lists in
 `configuration.nix`.
+System activation excludes Mac App Store apps from cleanup.
 
 Before running `bootstrap.sh` or `rebuild.sh`, add every formula and cask you
 want to keep to **`hosts/tedfan/darwin.nix`**. Adding it only to the shared
